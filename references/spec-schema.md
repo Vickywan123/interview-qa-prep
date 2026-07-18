@@ -83,9 +83,7 @@ HTML entities; the app escapes text at render time.
     {"id":"B1","cat":"B","sub":"Checkout redesign","q":"Walk me through your biggest launch","rounds":[2,3],
      "status":"risk","pri":"P1",
      "st":"Story arc. Name your exact role vs the team's — they may probe it.",
-     "ai":"Context: … Action: … Result: … Learning: …","fu":"What was YOUR part vs the team? (→ B2)"},
-    {"id":"B2","cat":"B","sub":"Checkout redesign","q":"Follow-up: your role vs the team's","rounds":[2,3],
-     "par":"B1","pri":"P2","st":"One clean boundary statement.","ai":"I owned ①②③; the team owned the build."}
+     "ai":"Context: … Action: … Result: … Learning: …","fu":"What was YOUR part vs the team?\nWhat would you do differently?"}
   ]
 }
 ```

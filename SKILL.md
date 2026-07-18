@@ -205,8 +205,9 @@ question; don't force one template onto everything.
   (one idea per line) — the at-a-glance version the user rehearses from. Keep them terse
   (fragments, not sentences). The user will edit these, so give a strong starting point, not
   a wall of text.
-- **Follow-up questions (`fu`)** — newline-separated. Point to related questions with
-  `(→ B3)` when useful.
+- **Follow-up questions (`fu`)** — newline-separated. Write each as a plain question. **Never
+  add ID cross-references like `(→ B3)`** — question IDs are not shown anywhere in the app, so a
+  pointer to one only confuses the user.
 
 **Ground every answer in the candidate's *real* history.** When only the candidate knows a
 number or a name you can't invent, write the surrounding answer and leave an explicit

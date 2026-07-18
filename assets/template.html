@@ -689,8 +689,8 @@ function detailHTML(it){
       onchange="toggleDone('${it.id}',this.checked)">Mastered — mark as done
       <button class="delbtn" onclick="event.preventDefault();deleteQuestion('${it.id}')">Delete question</button></label>`;
   const nav=`<div class="navrow">
-    <button class="navbtn" ${prev?`onclick="openDetail('${prev.id}')"`:"disabled"}>← ${prev?prev.id+" · "+esc(effQ(prev)).slice(0,40):"—"}</button>
-    <button class="navbtn" ${next?`onclick="openDetail('${next.id}')"`:"disabled"}>${next?next.id+" · "+esc(effQ(next)).slice(0,40):"—"} →</button>
+    <button class="navbtn" ${prev?`onclick="openDetail('${prev.id}')"`:"disabled"}>← ${prev?esc(effQ(prev)).slice(0,40):"—"}</button>
+    <button class="navbtn" ${next?`onclick="openDetail('${next.id}')"`:"disabled"}>${next?esc(effQ(next)).slice(0,40):"—"} →</button>
   </div>`;
   return `<div class="detail ${it.status==="risk"?"risk":""}">${b}</div>${nav}`;
 }
