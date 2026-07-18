@@ -681,7 +681,11 @@ function detailHTML(it){
     ["P1","P2","P3"].map((p,i2)=>`<button class="pbtn ${effPri(it).trim()===p?("on"+(i2+1)):""}"
       onclick="setPri('${it.id}','${p}')">${p==="P1"?"Must prep":p==="P2"?"Important":"If time"}</button>`).join("")+
     `</span></div>`;
-  // follow-up questions live right under the main question; tap one to prep it as its own card
+  { const v=effVal("st",it); if(v.trim()) b+=`<h4>Strategy</h4><div class="rodisp">${esc(v)}</div>`; }
+  { const v=effVal("ai",it); if(v.trim()) b+=`<h4>AI answer <span class="rohint">— reference; write your own below</span></h4><div class="rodisp">${esc(v)}</div>`; }
+  b+=`<h4>Bullet points</h4>`+ta("bp",it,"Your quick-recall points — one per line…");
+  b+=`<h4 class="myhead">My answer <button class="polishbtn" onclick="copyPolish('${it.id}',this)" title="Copy your answer + a polish prompt to paste into any AI chat">✨ Copy for AI polish</button></h4>`+ta("my",it,"Your own version — saved automatically.","my");
+  // follow-up questions at the bottom; tap a row to prep it as its own card and open it
   {
     const fuLines=effVal("fu",it).split("\n").map(s=>s.trim()).filter(Boolean);
     if(fuLines.length){
@@ -694,10 +698,6 @@ function detailHTML(it){
       b+=`</div>`;
     }
   }
-  { const v=effVal("st",it); if(v.trim()) b+=`<h4>Strategy</h4><div class="rodisp">${esc(v)}</div>`; }
-  { const v=effVal("ai",it); if(v.trim()) b+=`<h4>AI answer <span class="rohint">— reference; write your own below</span></h4><div class="rodisp">${esc(v)}</div>`; }
-  b+=`<h4>Bullet points</h4>`+ta("bp",it,"Your quick-recall points — one per line…");
-  b+=`<h4 class="myhead">My answer <button class="polishbtn" onclick="copyPolish('${it.id}',this)" title="Copy your answer + a polish prompt to paste into any AI chat">✨ Copy for AI polish</button></h4>`+ta("my",it,"Your own version — saved automatically.","my");
   b+=`<label class="donebar"><input type="checkbox" ${doneSet.has(it.id)?"checked":""}
       onchange="toggleDone('${it.id}',this.checked)">Mastered — mark as done
       <button class="delbtn" onclick="event.preventDefault();deleteQuestion('${it.id}')">Delete question</button></label>`;
