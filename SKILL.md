@@ -45,9 +45,10 @@ question bank and great draft content** — the app shell is already built and t
 ## Workflow
 
 Two gates, otherwise automatic: **(1)** if the candidate's background is missing, ask once;
-**(2)** confirm the interview *process* (rounds, who, goal) before generating, because
-different job families interview completely differently and a wrong process shape wastes the
-whole output. Everything else — questions, answers, priorities — you generate without
+**(2)** confirm the interview *process* (rounds, who, goal), the interview *language*, **and how
+many common baseline questions to include** (see the scale choice in step 4) before generating,
+because different job families interview completely differently and a wrong process shape wastes
+the whole output. Everything else — questions, answers, priorities — you generate without
 stopping; the user refines in the app.
 
 ### 1. Gather inputs (gate 1)
@@ -84,15 +85,24 @@ that a generic ladder would miss. Examples of what this surfaces:
 
 Skip or shortcut the search only when the user already told you the exact process.
 
-### 3. Research commonly-asked questions (when it helps)
+### 3. Assemble the questions: common baseline + role research
 
-For roles with a well-known question canon — coding/algorithms, system design, product sense,
-consulting-style cases, common behavioral sets — **search for the frequently-asked questions**
-(`"{job family} most common interview questions"`, `"{company} interview questions"`) and fold
-the real recurring ones into the bank. This grounds the tool in what's actually asked, not
-just what you'd guess. For niche roles, your own reasoning from the JD is enough. Always
-combine these canonical questions with **resume/portfolio-specific** questions (step 5) — the
-canon alone is generic; the candidate's own history is where interviews are won.
+Every bank is built from **two layers**:
+
+1. **The common baseline** — `references/common-questions.md` holds the universal questions asked
+   in almost any interview (tell me about yourself, weaknesses, why this job, why leaving, biggest
+   achievement, questions to ask, etc.), ranked into tiers. **Always include this baseline**, at
+   the size the user picks in the step-4 scale gate (~10 / ~20 / ~all). Adapt each to the real
+   candidate and role; drop any that genuinely don't fit.
+2. **Role- and résumé-specific questions** — layered *on top* of the baseline. For roles with a
+   well-known canon (coding/algorithms, system design, product sense, consulting cases), **search
+   for the frequently-asked questions** (`"{job family} most common interview questions"`,
+   `"{company} interview questions"`) and fold the real recurring ones in. Then add the
+   **résumé/portfolio-specific** questions (step 5) — the candidate's own history is where
+   interviews are won.
+
+The baseline keeps every bank solid; the role/résumé layer makes it *theirs*. Neither alone is
+enough — always ship both.
 
 ### 4. Confirm the process AND the interview language (gate 2)
 
@@ -111,6 +121,19 @@ English JD at a multinational may still interview in the local language, and man
 **mixed** (recall a China/APAC role where the local-manager round is in Mandarin but the global
 round is in English). Ask explicitly, e.g. "What language will the interview be in — English,
 中文, or mixed by round?" If it varies by round, note which round is which language.
+
+**In the same step, confirm the baseline scale** — how many of the common questions to include.
+Offer three choices (the role-specific questions from step 3/5 are always added *on top* of
+whichever they pick):
+
+> How many common baseline questions should I include (I'll add role- and résumé-specific ones
+> on top of any of these)?
+> - **~10 essentials** + role-specific — a focused, fast-to-prep bank
+> - **~20 thorough** + role-specific — solid coverage of the usual ground *(a good default)*
+> - **~27 / all common** + role-specific — exhaustive; leave nothing to chance
+
+Map their pick to the tiers in `references/common-questions.md` (~10 = Tier 1; ~20 = Tier 1+2;
+all = Tier 1+2+3). If they don't care, default to ~20.
 
 Once confirmed, encode each round in the spec's `rounds` map **as an object** with
 `label, who, goal, minutes, count, focus` — the app renders a **Process** overview page and a
@@ -131,9 +154,13 @@ These are the questions the whole tool exists to defuse — don't bury them.
 
 This is the heart of the skill. Think like an experienced interviewer for *this specific
 role at this specific company*, cross-referenced with *this specific candidate's* history.
-Aim for roughly **60–120 questions** for a substantial role; fewer is fine for a simple one.
-Assign each question to the round(s) it actually belongs in (step 4), and size each round by
-its real length.
+
+**Start from the common baseline, then layer role/résumé questions on top.** First lay in the
+chosen tier of `references/common-questions.md` (the scale the user picked in step 4), each
+adapted to the real candidate and role. Then add the role canon (step 3) and the
+résumé/portfolio-specific questions (step 5) on top. The total is baseline + role-specific — so
+"~20 common" plus, say, 30–50 role/résumé questions is a full, substantial bank. Assign each
+question to the round(s) it actually belongs in (step 4), and size each round by its real length.
 
 **The only two things you assign per question are its interview round(s) and its priority.**
 Every question gets `rounds` (R1 / R2 / R3 / R4 … — step 4) and a `pri` (Must prep / Important /
