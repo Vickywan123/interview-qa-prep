@@ -10,15 +10,14 @@ The spec JSON schema:
   "page_title": "Acme · PM — Interview Prep",   # browser tab title
   "header_h1":  "Acme · Product Manager — Interview Question Bank",
   "header_sub": "Acme Corp · R1 Recruiter  R2 Hiring Manager  R3 Panel",  # plain text or simple HTML
-  "categories": {"A":"Intro & Motivation", "B":"Experience Deep-Dive", ...},  # 1-8 letters
+  "categories": {"Q":"Questions"},   # always this single fixed entry — no per-category split
   "rounds": {"1":"R1 · HR", "2":"R2 · Hiring Manager", "3":"R3 · Panel"},  # any count; labels shown in the filter
 
   "jd_html": "<h3>About</h3><ul><li>...</li></ul>",   # the job description as light HTML
   "questions": [
     {
-      "id": "A1",              # unique; letter matches a category key + number
-      "cat": "A",              # category key
-      "sub": "Optional subgroup label",   # optional
+      "id": "Q1",              # unique, flat sequential (Q1, Q2, …); internal key, never shown
+      "cat": "Q",              # always "Q" (the single category)
       "q": "Tell me about yourself",
       "rounds": [1,2,3],       # which interview rounds this belongs to
       "status": "todo",        # "todo" or "risk" (risk = high-stakes, shown red)
@@ -160,8 +159,7 @@ def main():
     n_p1 = sum(1 for q in questions if q.get("pri") == "P1")
     n_risk = sum(1 for q in questions if q.get("status") == "risk")
     print(f"Built {out_path}")
-    print(f"  {len(questions)} questions across {len(cats)} categories "
-          f"| {n_p1} P1 | {n_risk} high-risk")
+    print(f"  {len(questions)} questions | {n_p1} P1 | {n_risk} high-risk")
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ thing you author; the app shell is fixed.
 | `header_h1`  | string          | yes      | Big title in the masthead. |
 | `mark`       | string          | no       | 2-letter logo mark in the masthead. Defaults to initials derived from the company (text before the first "·" in `header_h1`). |
 | `header_sub` | string (light HTML ok) | no | One-line subtitle. Good place to spell out the round map, e.g. `"Acme · <b>R1</b> Recruiter  <b>R2</b> Hiring Manager  <b>R3</b> Panel"`. |
-| `categories` | object          | yes      | Map of category key → display name. Keys are short (usually single letters `A`–`F`, up to 8). Order here = order in the app. |
+| `categories` | object          | yes      | **Always use one single category:** `{"Q":"Questions"}`. The app no longer shows category labels or splits the bank by category — it groups **only by priority**. This field stays only because the builder requires a non-empty map; keep it as this one fixed entry. |
 | `rounds`     | object          | no       | Map of round number (string) → **label string** OR a **round object** (below). **Any number of rounds** — 2, 3, 6, whatever the real process is. Defaults to a 3-round ladder. Each question's `rounds` array must reference numbers defined here. |
 
 ### Round object (recommended — powers the Process page)
@@ -45,13 +45,12 @@ the Process page is hidden automatically.
 
 | field    | type      | required | notes |
 |----------|-----------|----------|-------|
-| `id`     | string    | yes      | Unique. Convention: category key + number, e.g. `A1`, `B12`. Follow-ups can reuse the parent's number family (`B2`,`B3` under `B1`). |
-| `cat`    | string    | yes      | Must be a key in `categories`. |
-| `sub`    | string    | no       | Optional subgroup label shown within a category (e.g. a project name that several questions drill into). |
+| `id`     | string    | yes      | Unique, flat sequential: `Q1`, `Q2`, `Q3`, … in the order you write them. **No category letters** (never `A1`/`B2`). IDs are internal keys only — never shown to the user. |
+| `cat`    | string    | yes      | Always `"Q"` (the single category). |
 | `q`      | string    | yes      | The question text. |
 | `rounds` | int array | yes      | Which interview rounds, e.g. `[2,3]`. Use `[1,2,3,4]` for "any round". |
 | `status` | string    | no       | `"todo"` (default) or `"risk"` (high-stakes; renders red, has its own filter). |
-| `pri`    | string    | no       | `"P1"` / `"P2"` / `"P3"` / `""`. Sorts within each category. |
+| `pri`    | string    | no       | `"P1"` / `"P2"` / `"P3"` / `""`. The bank is grouped by this (Must prep / Important / If time) — the only grouping. |
 | `par`    | string    | no       | **Don't set this in the spec.** Follow-ups belong in the parent's `fu` field. `par` is used internally by the app when the user promotes a follow-up line into its own question. |
 | `st`     | string    | no       | Strategy: how to approach the answer (1–3 sentences). |
 | `bp`     | string    | no       | Bullet points: 3–5 short scannable points distilled from the answer, one per line (`\n`-separated). The user edits these. |
@@ -73,14 +72,14 @@ HTML entities; the app escapes text at render time.
   "page_title": "Acme · PM — Interview Prep",
   "header_h1": "Acme · Product Manager — Interview Question Bank",
   "header_sub": "Acme Corp · <b>R1</b> Recruiter  <b>R2</b> Hiring Manager  <b>R3</b> Panel",
-  "categories": {"A":"Intro & Motivation", "B":"Experience", "D":"Core Skills", "F":"Questions to Ask"},
+  "categories": {"Q":"Questions"},
   "rounds": {"1":"R1 · Recruiter", "2":"R2 · Hiring Manager", "3":"R3 · Panel"},
   "jd_html": "<h3>About the role</h3><ul><li>Own the checkout roadmap.</li><li>Partner with data on metrics.</li></ul>",
   "questions": [
-    {"id":"A1","cat":"A","q":"Tell me about yourself","rounds":[1,2,3],"pri":"P1",
+    {"id":"Q1","cat":"Q","q":"Tell me about yourself","rounds":[1,2,3],"pri":"P1",
      "st":"Two minutes, clear arc: background → most relevant role → why this next.",
      "ai":"I started in ①… then ②… which led me to ③…","fu":"Give the 30-second version.\nWhy this role?"},
-    {"id":"B1","cat":"B","sub":"Checkout redesign","q":"Walk me through your biggest launch","rounds":[2,3],
+    {"id":"Q2","cat":"Q","q":"Walk me through your biggest launch","rounds":[2,3],
      "status":"risk","pri":"P1",
      "st":"Story arc. Name your exact role vs the team's — they may probe it.",
      "ai":"Context: … Action: … Result: … Learning: …","fu":"What was YOUR part vs the team?\nWhat would you do differently?"}

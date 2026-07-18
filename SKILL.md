@@ -24,9 +24,9 @@ opens in any browser, no internet needed, that they can filter, sort, edit, and 
 - A **home page that is the interview pipeline**: one card per interview round (badge, who
   runs it, duration, question count, focus, must-prep/mastered counts) in a top-to-bottom flow
   with connectors — tap a round to see its questions, or "Browse all". This is the landing view.
-- A **question bank** grouped by category (motivation, experience deep-dive, behavioral,
-  role skills, company/industry, questions-to-ask, etc.), with a sidebar (a slide-in drawer on
-  mobile) to filter by category, interview round, priority, and a high-risk toggle, plus search.
+- A **question bank** organized by **priority** (Must prep / Important / If time) — no category
+  labels or letter IDs — with a sidebar (a slide-in drawer on mobile) to filter by interview
+  round, priority, and a high-risk toggle, plus search.
 - Each question opens as its **own full-page view** (not a cramped accordion) with five
   editable sections: **Strategy**, **Bullet points**, **AI answer**, **My answer**,
   **Follow-up questions**, plus per-question **round** checkboxes (one per interview round)
@@ -63,8 +63,8 @@ stopping; the user refines in the app.
 
 Interview processes are shaped by role type, so first **classify** from the JD/resume/
 portfolio: engineering, design/UX, art (game/visual), data/ML, product, marketing, sales,
-operations, research, etc. The job family drives both the interview pipeline *and* the
-question categories.
+operations, research, etc. The job family drives both the interview pipeline *and* which
+question areas the bank needs to cover.
 
 Then **research the typical process** with web search — you often don't know a specific
 company's or role's real pipeline, and it's very searchable. Search things like
@@ -135,8 +135,14 @@ Aim for roughly **60–120 questions** for a substantial role; fewer is fine for
 Assign each question to the round(s) it actually belongs in (step 4), and size each round by
 its real length.
 
-**Adapt the categories to the job family.** The letters/names are yours to choose — a generic
-motivation/behavioral/questions-to-ask spine plus role-specific craft categories:
+**Do NOT split the bank into labeled categories.** There are no A/B/C/D groupings and no
+category letters — the app organizes questions **only by priority** (Must prep / Important /
+If time). The topic areas below are a **coverage checklist** to make sure the bank is complete,
+*not* headings shown to the user. Write the questions in a natural thematic order (intro first,
+then experience, then behavioral, then craft, then company, then questions-to-ask); within each
+priority tier the app keeps that authored order, so a sensible flow falls out on its own.
+
+Cover the areas that fit the job family:
 
 - **Engineering** — Coding & Algorithms · System Design · CS fundamentals · Project deep-dive.
 - **Design / UX** — Portfolio walkthrough · Design process & craft · Design challenge/critique
@@ -147,14 +153,14 @@ motivation/behavioral/questions-to-ask spine plus role-specific craft categories
 - **Marketing / Sales / others** — the craft competencies named in the JD, asked as
   "how do you…" and "walk me through…".
 
-Whatever the family, almost every bank includes: **Intro & Motivation** (tell me about
+Whatever the family, almost every bank covers: **Intro & motivation** (tell me about
 yourself, why this role/company, why leaving, gaps, salary), **Experience / portfolio
 deep-dive** (one cluster per major project or piece, with follow-ups drilling into specifics —
 their exact role vs the team's, the real numbers, what they'd change — *this is where most
 interviews are won or lost*), **Behavioral** (disagreement, failure, conflict, ambiguity,
-weakness), the **role-specific craft** categories above, **Company & industry** (product,
-market, competitors — some requiring homework), and **Questions to ask** (grouped by who
-they'd ask).
+weakness), the **role-specific craft** above, **Company & industry** (product,
+market, competitors — some requiring homework), and **Questions to ask** (kept together by who
+they'd ask). These are coverage areas to hit, not visible sections.
 
 **Follow-ups matter.** Real interviewers rarely accept the first answer. For every
 substantial question, add 1–3 follow-ups in that question's **`fu` field** (one per line).
@@ -222,8 +228,8 @@ placeholders beat fabricated specifics — in the AI answer *and* the bullet poi
   manager who knows the space).
 - **`pri`** — `P1` must-prep (asked in almost any version of this interview, or a landmine),
   `P2` important (likely, and you have material), `P3` if-time (lower frequency or easy to
-  improvise). Be honest — if everything is P1, nothing is. The app sorts by priority within
-  each category, so this ordering is what the user studies down.
+  improvise). Be honest — if everything is P1, nothing is. The app groups the whole bank by
+  priority (this is the only grouping), so this ordering is what the user studies down.
 
 ### 9. Build and deliver
 
@@ -249,7 +255,7 @@ The exact spec JSON schema is documented at the top of `scripts/build.py` and in
 - **The app shell carries a considered, tested design — don't re-design it per run.** The
   template ("Interview War-Room" design): a masthead with a company logo mark + title, a home
   page that lays out the interview rounds as a pipeline (the landing view), a left sidebar of
-  filters (category / round / priority / high-risk) that becomes a slide-in drawer on mobile,
+  filters (round / priority / high-risk) that becomes a slide-in drawer on mobile,
   inline-editable priority/round chips, drag-to-reorder, and a full-page detail view. Navy/slate
   palette, serif headers, responsive and theme-aware. Generating good-looking output is the
   template's job — do **not** invoke a frontend-design pass or hand-roll HTML per generation;
