@@ -525,7 +525,7 @@ function setPri(id,p){
 }
 
 /* ---------- state ---------- */
-let page="home", catSel="all", roundSel=0, priSel="all", riskOnly=false, q="", detailId=null;
+let page="home", catSel="all", roundSel=0, priSel="all", riskOnly=false, askOnly=false, q="", detailId=null;
 let jdReturn="home";
 function setPage(p){page=p;detailId=null;closeDrawerIfMobile();render()}
 function toggleJD(){ if(page==="jd"){ page=jdReturn||"home"; } else { jdReturn=page; page="jd"; } detailId=null; closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
@@ -536,6 +536,7 @@ function setCat(c){catSel=c;page="q";detailId=null;closeDrawerIfMobile();render(
 function setRound(r){roundSel=r;page="q";detailId=null;closeDrawerIfMobile();render()}
 function setPriFilter(p){priSel=p;page="q";detailId=null;closeDrawerIfMobile();render()}
 function toggleRisk(v){riskOnly=v;page="q";detailId=null;closeDrawerIfMobile();render()}
+function toggleAsk(v){askOnly=v;page="q";detailId=null;closeDrawerIfMobile();render()}
 
 /* ---------- sidebar ---------- */
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")}
@@ -544,37 +545,42 @@ function sbtn(on,click,label,n){
 }
 function renderSide(){
   const ALL=allQ();
+  const base = askOnly ? ALL.filter(x=>x.cat==="F") : ALL.filter(x=>x.cat!=="F");
   document.getElementById("g-page").innerHTML = "";
-  const rCounts={}; RKEYS.forEach(r=>rCounts[r]=0); ALL.forEach(x=>effRounds(x).forEach(r=>{if(r in rCounts)rCounts[r]++}));
+  const rCounts={}; RKEYS.forEach(r=>rCounts[r]=0); base.forEach(x=>effRounds(x).forEach(r=>{if(r in rCounts)rCounts[r]++}));
   document.getElementById("g-round").innerHTML = `<h5>Round</h5>`+
     sbtn(roundSel===0,"setRound(0)","All rounds")+
     RKEYS.map(r=>sbtn(roundSel===r,`setRound(${r})`,ROUNDS[r],rCounts[r])).join("");
-  const pCount=p=>ALL.filter(x=>effPri(x).trim()===p).length;
-  document.getElementById("g-pri").innerHTML = `<h5>Priority</h5>`+
+  const pCount=p=>base.filter(x=>effPri(x).trim()===p).length;
+  document.getElementById("g-pri").innerHTML = askOnly ? "" : `<h5>Priority</h5>`+
     sbtn(priSel==="all","setPriFilter('all')","All")+
     sbtn(priSel==="P1","setPriFilter('P1')","Must prep",pCount("P1"))+
     sbtn(priSel==="P2","setPriFilter('P2')","Important",pCount("P2"))+
     sbtn(priSel==="P3","setPriFilter('P3')","If time",pCount("P3"))+
-    sbtn(priSel==="none","setPriFilter('none')","Unsorted",ALL.filter(x=>!effPri(x).trim()).length);
+    sbtn(priSel==="none","setPriFilter('none')","Unsorted",base.filter(x=>!effPri(x).trim()).length);
   document.getElementById("g-flags").innerHTML = `<h5>Filters</h5>`+
-    `<label class="stog"><input type="checkbox" ${riskOnly?"checked":""} onchange="toggleRisk(this.checked)">🔴 High-risk only</label>`;
+    `<label class="stog"><input type="checkbox" ${riskOnly?"checked":""} onchange="toggleRisk(this.checked)">🔴 High-risk only</label>`+
+    `<label class="stog"><input type="checkbox" ${askOnly?"checked":""} onchange="toggleAsk(this.checked)">🙋 Questions to ask only</label>`;
 }
 
 /* ---------- filtering & sorting ---------- */
-function match(it){
-  if(catSel!=="all" && it.cat!==catSel) return false;
+function matchBase(it){
   if(roundSel!==0 && !effRounds(it).includes(roundSel)) return false;
   if(riskOnly && it.status!=="risk") return false;
-  const p=effPri(it).trim();
-  if(priSel!=="all"){
-    if(priSel==="none"){ if(p) return false; }
-    else if(p!==priSel) return false;
-  }
   if(q){
     const hay=(it.id+" "+effQ(it)+" "
       +effVal("st",it)+" "+effVal("ai",it)+" "+effVal("fu",it)+" "
       +(EDITS.bp[it.id]||"")+" "+(EDITS.my[it.id]||"")).toLowerCase();
     if(!hay.includes(q.toLowerCase())) return false;
+  }
+  return true;
+}
+function match(it){
+  if(!matchBase(it)) return false;
+  const p=effPri(it).trim();
+  if(priSel!=="all"){
+    if(priSel==="none"){ if(p) return false; }
+    else if(p!==priSel) return false;
   }
   return true;
 }
@@ -720,7 +726,7 @@ function roundMeta(){ var m={};
    m[r]={t:t, who:who, head:meta.goal||"", focus:meta.focus||""};
  }); return m;}
 function renderHome(){
-  var META=roundMeta(), Q=allQ();
+  var META=roundMeta(), Q=allQ().filter(function(x){return x.cat!=="F";});
   var counts={}, done={}, p1={}; RKEYS.forEach(function(r){counts[r]=0;done[r]=0;p1[r]=0;});
   Q.forEach(function(x){ effRounds(x).forEach(function(r){ counts[r]++;
     if(doneSet.has(x.id)) done[r]++; if(effPri(x).trim()==="P1") p1[r]++; }); });
@@ -760,13 +766,14 @@ function updateChrome(){
 /* ---------- render ---------- */
 function renderStats(){
   const ALL=allQ();
-  const shown=ALL.filter(match);
-  const risk=ALL.filter(x=>x.status==="risk").length;
+  const base = askOnly ? ALL.filter(x=>x.cat==="F") : ALL.filter(x=>x.cat!=="F");
+  const shown=base.filter(match);
+  const risk=base.filter(x=>x.status==="risk").length;
   const answered=Object.keys(EDITS.my).length;
   document.getElementById("stats").innerHTML =
-    `Showing <b>${shown.length}</b> of <b>${ALL.length}</b><br>`+
+    `Showing <b>${shown.length}</b> of <b>${base.length}</b><br>`+
     `My answers <b>${answered}</b> · Mastered <b>${doneSet.size}</b><br>`+
-    `Must-prep <b style="color:var(--risk)">${ALL.filter(x=>effPri(x).trim()==="P1").length}</b>`+
+    `Must-prep <b style="color:var(--risk)">${base.filter(x=>effPri(x).trim()==="P1").length}</b>`+
     ` · High-risk <b style="color:var(--risk)">${risk}</b>`;
 }
 function render(){
@@ -780,19 +787,32 @@ function render(){
   if(page==="home"){ renderHome(); return; }
   if(page==="jd"){ list.innerHTML=`<div class="jd">${JD_HTML}</div>`; return; }
   const shown=shownList();
-  if(!shown.length){ list.innerHTML=`<button class="crumb" onclick="goHome()">&larr; Interview process</button><div class="empty">No questions here yet.</div>`; return; }
-  let html=`<button class="crumb" onclick="goHome()">&larr; Interview process</button>`;
-  let seq=0;
+  const ans=shown.filter(function(x){return x.cat!=="F";});
+  const ask=allQ().filter(function(x){return x.cat==="F" && matchBase(x);});
+  const crumb=`<button class="crumb" onclick="goHome()">&larr; Interview process</button>`;
+  let html=crumb, seq=0;
+  function askSection(){
+    ask.sort(function(a,b){return ((effRounds(a)[0]||9)-(effRounds(b)[0]||9))||effOrd(a)-effOrd(b);});
+    let h=`<div class="sechead">🙋 Questions to ask<small>${ask.length} for the interviewer</small></div>`;
+    for(const it of ask){ h+=cardHTML(it); }
+    return h;
+  }
+  if(askOnly){
+    html += ask.length ? askSection() : `<div class="empty">No questions to ask match this filter.</div>`;
+    list.innerHTML=html; return;
+  }
+  if(!ans.length && !ask.length){ list.innerHTML=crumb+`<div class="empty">No questions here yet.</div>`; return; }
   const tiers = (priSel!=="all") ? [priSel] : ["P1","P2","P3","none"];
   for(const tier of tiers){
-    const items=shown.filter(function(x){return tierKey(x)===tier;}).sort(function(a,b){return effOrd(a)-effOrd(b);});
-    if(priSel==="all" && tier==="none" && !items.length) continue;
+    const items=ans.filter(function(x){return tierKey(x)===tier;}).sort(function(a,b){return effOrd(a)-effOrd(b);});
+    if(!items.length && (priSel!=="all" || tier==="none")) continue;
     html+=`<div class="zone" data-tier="${tier}" ondragover="dragOverZone(event)" ondragleave="dragLeaveZone(event)" ondrop="dropZone(event,'${tier}')">`;
     html+=`<div class="zonehead z-${tier}">${TIERS[tier]} <span class="zn">(${items.length})</span></div>`;
     if(items.length){ for(const it of items){ seq++; html+=cardHTML(it,seq); } }
     else { html+=`<div class="zone-empty">Drag a question here for &ldquo;${TIERS[tier]}&rdquo;</div>`; }
     html+=`</div>`;
   }
+  if(ask.length) html+=askSection();
   list.innerHTML=html;
 
 }

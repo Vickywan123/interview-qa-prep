@@ -11,7 +11,7 @@ thing you author; the app shell is fixed.
 | `header_h1`  | string          | yes      | Big title in the masthead. |
 | `mark`       | string          | no       | 2-letter logo mark in the masthead. Defaults to initials derived from the company (text before the first "·" in `header_h1`). |
 | `header_sub` | string (light HTML ok) | no | One-line subtitle. Good place to spell out the round map, e.g. `"Acme · <b>R1</b> Recruiter  <b>R2</b> Hiring Manager  <b>R3</b> Panel"`. |
-| `categories` | object          | yes      | **Always use one single category:** `{"Q":"Questions"}`. The app no longer shows category labels or splits the bank by category — it groups **only by priority**. This field stays only because the builder requires a non-empty map; keep it as this one fixed entry. |
+| `categories` | object          | yes      | **Use exactly two fixed keys:** `{"Q":"Questions", "F":"Questions to ask"}`. The main bank (cat `"Q"`) groups only by priority — no visible category labels. Cat `"F"` is special: those are the **reverse questions the candidate asks the interviewer**; the app pulls them out of the priority tiers into a dedicated "🙋 Questions to ask" section and a sidebar toggle. Don't invent other category keys. |
 | `rounds`     | object          | no       | Map of round number (string) → **label string** OR a **round object** (below). **Any number of rounds** — 2, 3, 6, whatever the real process is. Defaults to a 3-round ladder. Each question's `rounds` array must reference numbers defined here. |
 
 ### Round object (recommended — powers the Process page)
@@ -46,7 +46,7 @@ the Process page is hidden automatically.
 | field    | type      | required | notes |
 |----------|-----------|----------|-------|
 | `id`     | string    | yes      | Unique, flat sequential: `Q1`, `Q2`, `Q3`, … in the order you write them. **No category letters** (never `A1`/`B2`). IDs are internal keys only — never shown to the user. |
-| `cat`    | string    | yes      | Always `"Q"` (the single category). |
+| `cat`    | string    | yes      | `"Q"` for normal questions (the vast majority). `"F"` **only** for reverse "questions to ask the interviewer" — those get pulled into the dedicated "🙋 Questions to ask" section. Never other values. |
 | `q`      | string    | yes      | The question text. |
 | `rounds` | int array | yes      | Which interview rounds, e.g. `[2,3]`. Use `[1,2,3,4]` for "any round". |
 | `status` | string    | no       | `"todo"` (default) or `"risk"` (high-stakes; renders red, has its own filter). |
@@ -72,7 +72,7 @@ HTML entities; the app escapes text at render time.
   "page_title": "Acme · PM — Interview Prep",
   "header_h1": "Acme · Product Manager — Interview Question Bank",
   "header_sub": "Acme Corp · <b>R1</b> Recruiter  <b>R2</b> Hiring Manager  <b>R3</b> Panel",
-  "categories": {"Q":"Questions"},
+  "categories": {"Q":"Questions", "F":"Questions to ask"},
   "rounds": {"1":"R1 · Recruiter", "2":"R2 · Hiring Manager", "3":"R3 · Panel"},
   "jd_html": "<h3>About the role</h3><ul><li>Own the checkout roadmap.</li><li>Partner with data on metrics.</li></ul>",
   "questions": [
@@ -82,7 +82,10 @@ HTML entities; the app escapes text at render time.
     {"id":"Q2","cat":"Q","q":"Walk me through your biggest launch","rounds":[2,3],
      "status":"risk","pri":"P1",
      "st":"Story arc. Name your exact role vs the team's — they may probe it.",
-     "ai":"Context: … Action: … Result: … Learning: …","fu":"What was YOUR part vs the team?\nWhat would you do differently?"}
+     "ai":"Context: … Action: … Result: … Learning: …","fu":"What was YOUR part vs the team?\nWhat would you do differently?"},
+    {"id":"Q3","cat":"F","q":"What does success look like for this role in the first year?","rounds":[2,3],"pri":"P2",
+     "st":"A reverse question you ASK the interviewer — cat \"F\" pulls it into the 'Questions to ask' section.",
+     "ai":"(This is a question you ask them — phrase it ready to say out loud.)"}
   ]
 }
 ```

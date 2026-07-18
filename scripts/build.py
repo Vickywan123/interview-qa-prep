@@ -10,14 +10,14 @@ The spec JSON schema:
   "page_title": "Acme · PM — Interview Prep",   # browser tab title
   "header_h1":  "Acme · Product Manager — Interview Question Bank",
   "header_sub": "Acme Corp · R1 Recruiter  R2 Hiring Manager  R3 Panel",  # plain text or simple HTML
-  "categories": {"Q":"Questions"},   # always this single fixed entry — no per-category split
+  "categories": {"Q":"Questions", "F":"Questions to ask"},   # two fixed keys: Q = normal, F = reverse questions to ask
   "rounds": {"1":"R1 · HR", "2":"R2 · Hiring Manager", "3":"R3 · Panel"},  # any count; labels shown in the filter
 
   "jd_html": "<h3>About</h3><ul><li>...</li></ul>",   # the job description as light HTML
   "questions": [
     {
       "id": "Q1",              # unique, flat sequential (Q1, Q2, …); internal key, never shown
-      "cat": "Q",              # always "Q" (the single category)
+      "cat": "Q",              # "Q" = normal question; "F" = reverse "question to ask the interviewer"
       "q": "Tell me about yourself",
       "rounds": [1,2,3],       # which interview rounds this belongs to
       "status": "todo",        # "todo" or "risk" (risk = high-stakes, shown red)

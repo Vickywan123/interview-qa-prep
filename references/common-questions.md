@@ -85,5 +85,7 @@ no sense for the role, and never let a baseline question crowd out a strong role
 
 ---
 
-**Reverse questions (22–26) belong in the "Questions to ask" area** of the bank — phrase them
-ready-to-say. The rest are questions *they* ask the candidate.
+**Reverse questions (#10 and 22–26) are "questions to ask the interviewer" — mark them `cat:"F"`**
+so the app pulls them into the dedicated "🙋 Questions to ask" section. Phrase them ready-to-say
+(the `ai` field is just the question, no model answer). Everything else is a question *they* ask
+the candidate → `cat:"Q"`.

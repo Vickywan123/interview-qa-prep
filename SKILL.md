@@ -170,10 +170,18 @@ which round, which priority) is the **user's to edit afterward**; you just give 
 complete starting point.
 
 **Do NOT split the bank into labeled categories.** There are no A/B/C/D groupings and no
-category letters. The topic areas below are a **coverage checklist** to make sure the bank is
-complete, *not* headings shown to the user. Write the questions in a natural thematic order
-(intro first, then experience, then behavioral, then craft, then company, then questions-to-ask);
-within each priority tier the app keeps that authored order, so a sensible flow falls out on its own.
+category letters — every normal question is `cat:"Q"`. The topic areas below are a **coverage
+checklist** to make sure the bank is complete, *not* headings shown to the user. Write the
+questions in a natural thematic order (intro first, then experience, then behavioral, then craft,
+then company); within each priority tier the app keeps that authored order, so a sensible flow
+falls out on its own.
+
+**The one exception — "Questions to ask the interviewer" use `cat:"F"`.** These are the reverse
+questions the *candidate* asks (not questions they answer). Mark each one `cat:"F"` and the app
+automatically pulls them out of the priority tiers into a dedicated "🙋 Questions to ask" section
+with its own sidebar toggle. Give them a `rounds` value (so they sort by which round to ask in)
+and a `pri`; their `ai` field is just the question phrased ready to say out loud (no model answer).
+Everything else stays `cat:"Q"`.
 
 Cover the areas that fit the job family:
 
@@ -192,8 +200,9 @@ deep-dive** (one cluster per major project or piece, with follow-ups drilling in
 their exact role vs the team's, the real numbers, what they'd change — *this is where most
 interviews are won or lost*), **Behavioral** (disagreement, failure, conflict, ambiguity,
 weakness), the **role-specific craft** above, **Company & industry** (product,
-market, competitors — some requiring homework), and **Questions to ask** (kept together by who
-they'd ask). These are coverage areas to hit, not visible sections.
+market, competitors — some requiring homework), and **Questions to ask** (the reverse questions
+the candidate asks — mark these `cat:"F"`; the app gives them their own section). These are
+coverage areas to hit; only "Questions to ask" is a visible section (via `cat:"F"`).
 
 **Follow-ups matter.** Real interviewers rarely accept the first answer. For every
 substantial question, add 1–3 follow-ups in that question's **`fu` field** (one per line).
