@@ -135,12 +135,18 @@ Aim for roughly **60–120 questions** for a substantial role; fewer is fine for
 Assign each question to the round(s) it actually belongs in (step 4), and size each round by
 its real length.
 
+**The only two things you assign per question are its interview round(s) and its priority.**
+Every question gets `rounds` (R1 / R2 / R3 / R4 … — step 4) and a `pri` (Must prep / Important /
+If time). Those are the *only* two organizing dimensions — the app groups the bank by priority
+and filters it by round, and that's it. Everything else about a question (wording, answer,
+which round, which priority) is the **user's to edit afterward**; you just give a strong,
+complete starting point.
+
 **Do NOT split the bank into labeled categories.** There are no A/B/C/D groupings and no
-category letters — the app organizes questions **only by priority** (Must prep / Important /
-If time). The topic areas below are a **coverage checklist** to make sure the bank is complete,
-*not* headings shown to the user. Write the questions in a natural thematic order (intro first,
-then experience, then behavioral, then craft, then company, then questions-to-ask); within each
-priority tier the app keeps that authored order, so a sensible flow falls out on its own.
+category letters. The topic areas below are a **coverage checklist** to make sure the bank is
+complete, *not* headings shown to the user. Write the questions in a natural thematic order
+(intro first, then experience, then behavioral, then craft, then company, then questions-to-ask);
+within each priority tier the app keeps that authored order, so a sensible flow falls out on its own.
 
 Cover the areas that fit the job family:
 

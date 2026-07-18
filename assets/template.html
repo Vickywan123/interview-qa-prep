@@ -313,6 +313,8 @@ h1{cursor:pointer}
 .polishbtn:hover{background:var(--accent-soft)}
 .fulist{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .furow{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:13px}
+.furow.clk{cursor:pointer}
+.furow.clk:hover{border-color:var(--accent);background:var(--accent-soft)}
 .futext{min-width:0}
 .fubtn{flex:none;border:1px solid var(--accent);background:none;color:var(--accent);border-radius:14px;padding:3px 11px;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .fubtn:hover{background:var(--accent-soft)}
@@ -387,7 +389,9 @@ function notifySaved(){
 function persist(){ localStorage.setItem(K_EDITS, JSON.stringify(EDITS)); notifySaved(); }
 function saveDone(){ localStorage.setItem(K_DONE, JSON.stringify([...doneSet])); notifySaved(); }
 let lastId = localStorage.getItem(K_LAST)||null;
+let lastRound = localStorage.getItem(K_LAST+"_round")||null;   // last round the user entered
 function touch(id){ lastId=id; localStorage.setItem(K_LAST,id); }
+function touchRound(r){ lastRound=String(r); localStorage.setItem(K_LAST+"_round",String(r)); }
 function saveF(kind,id,val){
   if(val.trim()) EDITS[kind][id]=val; else delete EDITS[kind][id];
   touch(id); persist();
@@ -471,7 +475,16 @@ function promoteFu(parId, idx){
   const id="N"+n;
   EDITS.add[id]={cat:par.cat, par:parId};
   EDITS.qt[id]=text; EDITS.rounds[id]=effRounds(par).slice();
-  persist(); page="q"; detailId=id; render(); window.scrollTo(0,0);
+  persist(); openDetail(id);
+}
+// tapping a follow-up line: open its card if already prepped, else prep it (make a card) and open
+function openFu(parId, idx){
+  const par=findQ(parId); if(!par) return;
+  const lines=effVal("fu",par).split("\n").map(s=>s.trim()).filter(Boolean);
+  const text=lines[idx]; if(!text) return;
+  const existing=kids(parId).find(k=>effQ(k).trim()===text);
+  if(existing){ openDetail(existing.id); return; }
+  promoteFu(parId, idx);
 }
 function deleteQuestion(id){
   if(!confirm("Delete this question? This cannot be undone.")) return;
@@ -549,7 +562,6 @@ function renderSide(){
 
 /* ---------- filtering & sorting ---------- */
 function match(it){
-  if(it.par) return false;
   if(catSel!=="all" && it.cat!==catSel) return false;
   if(roundSel!==0 && !effRounds(it).includes(roundSel)) return false;
   if(riskOnly && it.status!=="risk") return false;
@@ -634,7 +646,9 @@ function cardHTML(it,seq){
     </div></div>`;
 }
 
-function openDetail(id){ detailId=id; touch(id); closeDrawer(); render(); window.scrollTo({top:0}); }
+function openDetail(id){ detailId=id; touch(id);
+  const it=findQ(id); if(it){ const r=effRounds(it)[0]; if(r) touchRound(r); }
+  closeDrawer(); render(); window.scrollTo({top:0}); }
 function closeDetail(){
   detailId=null; render();
   if(lastId){ const el=document.getElementById("c-"+lastId);
@@ -667,24 +681,23 @@ function detailHTML(it){
     ["P1","P2","P3"].map((p,i2)=>`<button class="pbtn ${effPri(it).trim()===p?("on"+(i2+1)):""}"
       onclick="setPri('${it.id}','${p}')">${p==="P1"?"Must prep":p==="P2"?"Important":"If time"}</button>`).join("")+
     `</span></div>`;
-  { const v=effVal("st",it); if(v.trim()) b+=`<h4>Strategy</h4><div class="rodisp">${esc(v)}</div>`; }
-  { const v=effVal("ai",it); if(v.trim()) b+=`<h4>AI answer <span class="rohint">— reference; write your own below</span></h4><div class="rodisp">${esc(v)}</div>`; }
-  b+=`<h4>Bullet points</h4>`+ta("bp",it,"Your quick-recall points — one per line…");
-  b+=`<h4 class="myhead">My answer <button class="polishbtn" onclick="copyPolish('${it.id}',this)" title="Copy your answer + a polish prompt to paste into any AI chat">✨ Copy for AI polish</button></h4>`+ta("my",it,"Your own version — saved automatically.","my");
+  // follow-up questions live right under the main question; tap one to prep it as its own card
   {
     const fuLines=effVal("fu",it).split("\n").map(s=>s.trim()).filter(Boolean);
     if(fuLines.length){
       const kidByQ={}; kids(it.id).forEach(k=>{kidByQ[effQ(k).trim()]=k.id;});
-      b+=`<h4>Follow-up questions <span class="fuhint">— tap to prep any as its own question</span></h4>`;
-      b+=`<div class="fulist">`;
+      b+=`<h4>Follow-up questions <span class="fuhint">— tap one to prep it as its own question</span></h4><div class="fulist">`;
       fuLines.forEach((line,idx)=>{ const cid=kidByQ[line];
-        b+=`<div class="furow"><span class="futext">${esc(line)}</span>`+
-          (cid?`<button class="fubtn open" onclick="openDetail('${cid}')">Open →</button>`
-              :`<button class="fubtn" onclick="promoteFu('${it.id}',${idx})">＋ Prep as question</button>`)+`</div>`;
+        b+=`<div class="furow clk" onclick="openFu('${it.id}',${idx})"><span class="futext">${esc(line)}</span>`+
+          `<span class="fubtn${cid?" open":""}">${cid?"Open →":"＋ Prep →"}</span></div>`;
       });
       b+=`</div>`;
     }
   }
+  { const v=effVal("st",it); if(v.trim()) b+=`<h4>Strategy</h4><div class="rodisp">${esc(v)}</div>`; }
+  { const v=effVal("ai",it); if(v.trim()) b+=`<h4>AI answer <span class="rohint">— reference; write your own below</span></h4><div class="rodisp">${esc(v)}</div>`; }
+  b+=`<h4>Bullet points</h4>`+ta("bp",it,"Your quick-recall points — one per line…");
+  b+=`<h4 class="myhead">My answer <button class="polishbtn" onclick="copyPolish('${it.id}',this)" title="Copy your answer + a polish prompt to paste into any AI chat">✨ Copy for AI polish</button></h4>`+ta("my",it,"Your own version — saved automatically.","my");
   b+=`<label class="donebar"><input type="checkbox" ${doneSet.has(it.id)?"checked":""}
       onchange="toggleDone('${it.id}',this.checked)">Mastered — mark as done
       <button class="delbtn" onclick="event.preventDefault();deleteQuestion('${it.id}')">Delete question</button></label>`;
@@ -707,11 +720,11 @@ function roundMeta(){ var m={};
    m[r]={t:t, who:who, head:meta.goal||"", focus:meta.focus||""};
  }); return m;}
 function renderHome(){
-  var META=roundMeta(), Q=allQ().filter(function(x){return !x.par;});
+  var META=roundMeta(), Q=allQ();
   var counts={}, done={}, p1={}; RKEYS.forEach(function(r){counts[r]=0;done[r]=0;p1[r]=0;});
   Q.forEach(function(x){ effRounds(x).forEach(function(r){ counts[r]++;
     if(doneSet.has(x.id)) done[r]++; if(effPri(x).trim()==="P1") p1[r]++; }); });
-  var curR=null; if(lastId){ var it=findQ(lastId); if(it) curR=effRounds(it)[0]; }
+  var curR = lastRound ? parseInt(lastRound,10) : null;   // the round the user last entered
   var html='<div class="rounds"><p class="rhint">4 interview rounds &middot; tap a round to see its questions</p>';
   RKEYS.forEach(function(r,i){
     var m=META[r];
@@ -733,7 +746,7 @@ function renderHome(){
   document.getElementById("list").innerHTML=html;
 }
 function goHome(){ page="home"; detailId=null; roundSel=0; closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
-function openRound(r){ page="q"; roundSel=r; catSel="all"; priSel="all"; riskOnly=false; detailId=null; closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
+function openRound(r){ page="q"; roundSel=r; catSel="all"; priSel="all"; riskOnly=false; detailId=null; touchRound(r); closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
 function browseAll(){ page="q"; roundSel=0; detailId=null; render(); window.scrollTo({top:0}); }
 
 /* ---------- chrome visibility (sidebar / search / add only in browse) ---------- */
