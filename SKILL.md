@@ -1,8 +1,8 @@
 ---
-name: interview-prep
+name: interview-qa-prep
 description: >-
   Turn a job description plus the candidate's resume/background into an interactive,
-  editable HTML interview-prep app: a categorized question bank where every question
+  editable HTML interview Q&A prep app: a categorized question bank where every question
   carries a strategy, a draft answer, likely follow-ups, an interview-round tag, and a
   priority — all filterable, sortable, and editable in the browser with autosave.
   Use this whenever someone is preparing for a job interview and gives you a JD (link,
@@ -13,7 +13,7 @@ description: >-
   tool. Produce the tool by default; it is the deliverable.
 ---
 
-# Interview Prep Builder
+# Interview Q&A Prep
 
 Turn a **job description + the candidate's background** into a self-contained, editable
 HTML app for interview preparation. The app is the deliverable — a single file the user

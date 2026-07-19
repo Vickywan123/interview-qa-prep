@@ -1,7 +1,7 @@
-# interview-prep
+# Interview Q&A Prep
 
 A [Claude Code](https://claude.com/claude-code) skill that turns a **job description + a
-candidate's background** into a self-contained, **editable HTML interview-prep app** — a
+candidate's background** into a self-contained, **editable HTML interview Q&A prep app** — a
 categorized question bank where every question carries a strategy, a draft answer, likely
 follow-ups, an interview-round tag, and a priority. Everything is filterable, sortable, and
 editable right in the browser, with autosave. No internet needed once generated.
@@ -45,7 +45,7 @@ Drop this folder into your Claude Code skills directory:
 
 ```bash
 git clone https://github.com/Vickywan123/interview-prep-skill.git \
-  ~/.claude/skills/interview-prep
+  ~/.claude/skills/interview-qa-prep
 ```
 
 Then in Claude Code, just describe an interview you're preparing for and hand over the JD —

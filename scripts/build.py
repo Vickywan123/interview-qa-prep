@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build an interactive interview-prep HTML from a spec JSON.
+Build an interactive interview Q&A prep HTML from a spec JSON.
 
 Usage:
     python build.py spec.json output.html
