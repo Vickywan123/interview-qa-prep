@@ -30,12 +30,12 @@ A 4-part structure (keep it ~90 seconds to 2 minutes):
 
 **Example (Alex → Meridian PM, English):**
 
-> *(1 · snapshot)* I've spent the last six years building B2B SaaS products — I started in
-> marketing at BrightWave, then moved into product as a Product Manager at Northwind and a
+> *(1 · snapshot)* I've spent the last eight years building B2B SaaS products — I started in
+> product analytics at BrightWave, then grew into product roles as a Product Manager at Northwind and a
 > Senior PM at Brightline.
 >
 > *(2 · achievements)* Along the way I've shipped at real scale: I took TaskFlow from launch to
-> 50,000+ business customers, and grew Insight while lifting its retention about 7% through
+> 50,000+ business customers, and grew Insight while cutting its 30-day churn by about a third through
 > data-driven iteration.
 >
 > *(3 · what I know about the role)* I know this role is about owning the workflow and analytics
@@ -75,7 +75,7 @@ tips go in the AI answer, delivery tips go in the Strategy field as live coachin
 >
 > *(2 · story)* At Brightline I was the bridge between our product team and enterprise partners
 > like Skyline Systems — I translated customer insight into product and grew Insight while
-> lifting retention ~7% on data; at Northwind I took TaskFlow to 50,000+ customers.
+> cutting churn by about a third on data; at Northwind I took TaskFlow to 50,000+ customers.
 >
 > *(3 · sell yourself)* So you'd get a product owner who ships at scale, decides on data, and
 > knows the customer's workflow cold — the exact combination this role is built for.
@@ -278,7 +278,7 @@ The one rule: **pick a strength with DIRECT application to this job.** Everythin
 >
 > *(2 · story + learning)* At Brightline I spotted a recurring user behaviour, turned it into
 > Insight, and when retention plateaued I didn't guess — I read the drop-off curve, formed a
-> hypothesis, and tested a redesigned onboarding flow, lifting retention ~7%. The learning that
+> hypothesis, and tested a redesigned onboarding flow, cutting churn by about a third. The learning that
 > stuck: the strength isn't having the idea, it's validating it cheaply before betting big.
 >
 > *(3 · connect to role)* At this role's scale, that instinct — insight → shipped product →
