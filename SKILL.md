@@ -77,8 +77,8 @@ that a generic ladder would miss. Examples of what this surfaces:
   interviews → onsite (system design + behavioral).
 - **Design / UX** — recruiter screen → portfolio review → design challenge / whiteboard →
   onsite (craft + collaboration + behavioral).
-- **Art (games/visual)** — recruiter screen → portfolio review → **art test** (take-home) →
-  panel with the art director.
+- **Art / visual design** — recruiter screen → portfolio review → **art/design exercise**
+  (take-home) → panel with the creative lead.
 - **Product** — recruiter → hiring manager → product-sense + analytics/execution rounds →
   onsite panel.
 - **Marketing / Sales** — recruiter → hiring manager → skills/case or mock exercise → panel.
@@ -188,7 +188,7 @@ Cover the areas that fit the job family:
 - **Engineering** — Coding & Algorithms · System Design · CS fundamentals · Project deep-dive.
 - **Design / UX** — Portfolio walkthrough · Design process & craft · Design challenge/critique
   · Collaboration.
-- **Art (games/visual)** — Portfolio & style range · Art test debrief · Pipeline & tools ·
+- **Art / visual design** — Portfolio & style range · Exercise debrief · Pipeline & tools ·
   Art direction fit.
 - **Product** — Product sense · Analytics & execution · Strategy · Project deep-dive.
 - **Marketing / Sales / others** — the craft competencies named in the JD, asked as

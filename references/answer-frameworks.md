@@ -8,7 +8,7 @@ recipes because they're battle-tested shapes interviewers respond to.
 Always fill the structure with the **candidate's real history** and the **target role/company**
 — the framework is the skeleton, their story is the flesh. Match the interview language.
 
-> The examples below use a **fictional candidate ("Alex")** with a mobile-games/product
+> The examples below use a **fictional candidate ("Alex")** with a generic B2B SaaS / product
 > background purely to illustrate the shape. Replace with the real candidate's history.
 
 This file grows: add new frameworks as the user supplies them.
@@ -28,23 +28,23 @@ A 4-part structure (keep it ~90 seconds to 2 minutes):
 4. **WHY you're the RIGHT fit** — connect your background directly to what *they* need.
    End on the match, not on yourself.
 
-**Example (Alex → Lumina China PM, English):**
+**Example (Alex → Meridian PM, English):**
 
-> *(1 · snapshot)* I've spent the last six years building engaging mobile products, mostly in
-> the Chinese market — I started in marketing at BrightWave, then moved into games as a
-> Publishing Manager at NovaPlay and a Producer at PixelForge.
+> *(1 · snapshot)* I've spent the last six years building B2B SaaS products — I started in
+> marketing at BrightWave, then moved into product as a Product Manager at Northwind and a
+> Senior PM at Brightline.
 >
-> *(2 · achievements)* Along the way I've shipped at real scale: I took Doodle Keyboard from
-> concept to 50M+ downloads, and built Idle Rescue to 11M+ while lifting its retention
-> about 7% through data-driven iteration.
+> *(2 · achievements)* Along the way I've shipped at real scale: I took TaskFlow from launch to
+> 50,000+ business customers, and grew Insight while lifting its retention about 7% through
+> data-driven iteration.
 >
-> *(3 · what I know about the role)* I know this role is about owning content and monetization
-> products end to end, bridging Lumina's China teams with the global org and localizing for
-> the market.
+> *(3 · what I know about the role)* I know this role is about owning the workflow and analytics
+> products end to end, connecting the product and customer-facing teams so the roadmap actually
+> reflects what users need.
 >
 > *(4 · why I fit)* That's exactly my intersection — product ownership, data-driven iteration,
-> deep China-market knowledge, and I'm fully bilingual, so I can turn China's product
-> strengths into global wins.
+> and turning customer insight into products that scale — which is the exact combination this
+> role needs.
 
 Note how each tip maps to one short paragraph. Keep tip 4 tight — it's the landing.
 
@@ -67,18 +67,18 @@ tips go in the AI answer, delivery tips go in the Strategy field as live coachin
    answer to their problem.
 5. **Be confidently YOU** — let your genuine self show; conviction beats a polished script.
 
-**Example (Alex → Lumina China PM, English):**
+**Example (Alex → Meridian PM, English):**
 
-> *(1 · their pain + how I solve it)* The hard part of this role is turning China's product and
-> creator strengths into products that win globally — and that takes someone who genuinely
-> lives on both sides. That's the gap I fill.
+> *(1 · their pain + how I solve it)* The hard part of this role is turning deep customer insight
+> into products that actually scale across a large SaaS user base — and that takes someone who
+> lives in both the data and the customer's workflow. That's the gap I fill.
 >
-> *(2 · story)* At PixelForge I was the bridge between our Chinese team and overseas partners like
-> Skyline Games — I translated market insight into product and shipped Idle Rescue to 11M+,
-> lifting retention ~7% on data; at NovaPlay I took Doodle Keyboard to 50M+.
+> *(2 · story)* At Brightline I was the bridge between our product team and enterprise partners
+> like Skyline Systems — I translated customer insight into product and grew Insight while
+> lifting retention ~7% on data; at Northwind I took TaskFlow to 50,000+ customers.
 >
-> *(3 · sell yourself)* So you'd get a product owner who ships at scale, decides on data, knows
-> the China market cold, and is fully bilingual — the exact combination this role is built for.
+> *(3 · sell yourself)* So you'd get a product owner who ships at scale, decides on data, and
+> knows the customer's workflow cold — the exact combination this role is built for.
 
 **Strategy field for this question:** "Deliver with calm confidence — you're not asking for
 the job, you're showing you're the obvious answer to their problem. Lead with THEIR pain, back
@@ -99,18 +99,18 @@ A 3-part structure:
 3. **Signal you can stay long-term** — reassure the interviewer you're not a flight risk;
    frame this as a place you'd want to grow into and build something lasting.
 
-**Example (Alex → Lumina China PM, English):**
+**Example (Alex → Meridian PM, English):**
 
-> *(1 · what you'll be doing)* In five years I want to be deeply owning content and monetization
-> products at global scale — shaping how China's product and creator strengths translate into
-> products that win across markets.
+> *(1 · what you'll be doing)* In five years I want to be deeply owning workflow and analytics
+> products at scale — shaping how customer insight translates into products that win across the
+> market.
 >
 > *(2 · skills to develop)* Along the way I want to sharpen skills I can only build here: large-
-> scale content and ads product, data at Lumina's scale, and cross-market product strategy —
-> going deeper than mobile games let me.
+> scale SaaS product, data at Meridian's scale, and cross-functional product strategy — going
+> deeper than my earlier roles let me.
 >
 > *(3 · long-term signal)* Honestly this is somewhere I'd want to grow into for the long run —
-> Lumina is where those skills compound, and I'd rather go deep and build something lasting
+> Meridian is where those skills compound, and I'd rather go deep and build something lasting
 > than keep switching.
 
 **Strategy field for this question:** "Talk about the work, never a title — don't say you want
@@ -131,19 +131,20 @@ challenge, leadership, influence, ambiguity, mistake, etc.). Four parts, short p
 
 **Example (Alex, "Tell me about a challenge you faced," English):**
 
-> *(Context)* At NovaPlay I was working with a studio that had shipped 60+ games without a
-> single hit; they pitched Doodle Keyboard but resisted it because the liquid and shader effects
-> were technically hard, and then wanted to test a version I didn't think was ready.
+> *(Context)* At Northwind I was working with a team that had shipped dozens of features without
+> one that drove real adoption; they pitched an automation feature but resisted it because the
+> automation engine was technically hard, and then wanted to ship a version I didn't think was
+> ready.
 >
-> *(Action)* Rather than pull rank, I made the product case with concrete references, reframed
-> the technical difficulty as the market differentiator, and held the quality gate until the
-> build was strong enough to test honestly.
+> *(Action)* Rather than pull rank, I made the product case with concrete customer evidence,
+> reframed the technical difficulty as the differentiator, and held the quality gate until the
+> build was solid enough to launch honestly.
 >
-> *(Result)* It tested at a strong CPI and grew to 50M+ downloads, and the studio became a
-> strategic partner.
+> *(Result)* It launched to strong adoption and became one of the product's flagship features,
+> and the team became a key partner.
 >
 > *(Learning)* It taught me that disagreement is won with evidence and a testable next step,
-> not authority — a habit I use on every studio call now.
+> not authority — a habit I use on every product call now.
 
 **Strategy field for behavioral questions:** "Use Context → Action → Result → Learning. Spend
 most of it on YOUR Action ('I', not 'we'), give a measurable Result, and always end on the
@@ -200,10 +201,10 @@ don't dwell.
 **Situation 2 — role/fit or performance issue (framed gracefully):**
 
 > After some management changes, it became clear the new director had different expectations
-> for my role that didn't line up with my strengths, and he eventually brought in someone with
-> more sales experience. The experience actually clarified where my real strength is —
-> financial modelling — and I know I'd be a major asset in a role like this one, which focuses
-> on budgets and forecasts. I'd be happy to walk you through that expertise.
+> for my role that didn't line up with my strengths, and they eventually brought in someone with
+> a different focus. The experience actually clarified where my real strength is — turning
+> customer insight into shipped product — and I know I'd be a major asset in a role like this
+> one, which is built around exactly that. I'd be happy to walk you through it.
 
 *(neutral external framing → reframe as learning about your real strength → bridge to fit;
 never attack the manager)*
@@ -243,13 +244,13 @@ A behavioral question (use the CARL spine) with three failure-specific moves on 
 > *(Define)* I'd define my biggest failure as a time I built all the right operational pieces
 > but still let the product outcome slip.
 >
-> *(One thing · CARL)* At PixelForge I owned our Skyline Games partnership end to end — I built the art
-> pipeline, negotiated better terms, and delivered four prototypes. But none hit their targets.
-> The root cause was mine: the pressure to keep shipping quietly eroded our concept-selection
-> bar, and I raised the capacity problem too late.
+> *(One thing · CARL)* At Brightline I owned our Skyline Systems integration partnership end to
+> end — I built the delivery pipeline, negotiated better terms, and shipped four releases. But
+> none hit their adoption targets. The root cause was mine: the pressure to keep shipping quietly
+> eroded our feature-selection bar, and I raised the capacity problem too late.
 >
-> *(Learning)* What I changed: I now protect the greenlight standard even at the cost of fewer
-> launches — execution can't rescue a weak product hypothesis — and I separate ideation from
+> *(Learning)* What I changed: I now protect the quality bar for what we ship even at the cost of
+> fewer launches — execution can't rescue a weak product hypothesis — and I separate ideation from
 > delivery and set the kill line upfront.
 
 **Strategy field for this question:** "Open by defining what you count as failure — it puts you
@@ -271,14 +272,14 @@ The one rule: **pick a strength with DIRECT application to this job.** Everythin
 
 **Example (Alex → product role, English):**
 
-> *(1 · strength w/ direct application)* My biggest strength is turning a market insight into a
+> *(1 · strength w/ direct application)* My biggest strength is turning a customer insight into a
 > product that ships and performs — and validating it on data, not opinion. That's exactly what
 > this role needs.
 >
-> *(2 · story + learning)* At PixelForge I spotted a familiar user behaviour, turned it into Idle
-> Rescue, and when retention plateaued I didn't guess — I read the drop-off curve, formed a
-> hypothesis, and tested dialogue choices, lifting retention ~7%. The learning that stuck: the
-> strength isn't having the idea, it's validating it cheaply before betting big.
+> *(2 · story + learning)* At Brightline I spotted a recurring user behaviour, turned it into
+> Insight, and when retention plateaued I didn't guess — I read the drop-off curve, formed a
+> hypothesis, and tested a redesigned onboarding flow, lifting retention ~7%. The learning that
+> stuck: the strength isn't having the idea, it's validating it cheaply before betting big.
 >
 > *(3 · connect to role)* At this role's scale, that instinct — insight → shipped product →
 > data-driven iteration — is what actually moves the metrics.
