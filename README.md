@@ -44,7 +44,7 @@ generating a strong question bank and strong draft content.
 Drop this folder into your Claude Code skills directory:
 
 ```bash
-git clone https://github.com/Vickywan123/interview-prep-skill.git \
+git clone https://github.com/Vickywan123/interview-qa-prep.git \
   ~/.claude/skills/interview-qa-prep
 ```
 
