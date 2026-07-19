@@ -8,6 +8,10 @@ editable right in the browser, with autosave. No internet needed once generated.
 
 The app is the deliverable: one HTML file the candidate opens in any browser.
 
+**▶️ [Live demo](https://vickywan123.github.io/interview-qa-prep/)** — a sample bank generated for
+a (fictional) Marketing Strategy & Operations candidate. Try the round pipeline, filters, the
+"Questions to ask" section, and the editable detail view.
+
 ## What you get
 
 - **Home page = the interview pipeline** — one card per round (who runs it, duration, question
