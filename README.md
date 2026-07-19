@@ -20,7 +20,7 @@ The app is the deliverable: one HTML file the candidate opens in any browser.
 - **Your edits win, forever** — the generated content is a default layer; the moment you edit a
   field it saves to the browser's localStorage and overrides the default, so regenerating the
   file never destroys your work. Export the whole bank to Markdown, or back up / restore as JSON.
-- **Bilingual / mixed-language** — English, 中文, or mixed by round (e.g. a China-team round in
+- **Bilingual / mixed-language** — English, Chinese, or mixed by round (e.g. a China-team round in
   Mandarin and a global round in English).
 
 ## How it works
@@ -49,8 +49,7 @@ git clone https://github.com/Vickywan123/interview-prep-skill.git \
 ```
 
 Then in Claude Code, just describe an interview you're preparing for and hand over the JD —
-the skill triggers on requests like "prep me for this interview", "build interview questions",
-"生成面试题", etc. Requires Python 3 (standard library only, no dependencies).
+the skill triggers on requests like "prep me for this interview", "build interview questions", etc. Requires Python 3 (standard library only, no dependencies).
 
 ## Layout
 

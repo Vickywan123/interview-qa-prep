@@ -15,7 +15,7 @@ This file grows: add new frameworks as the user supplies them.
 
 ---
 
-## "Tell me about yourself" / 请做个自我介绍
+## "Tell me about yourself"
 
 A 4-part structure (keep it ~90 seconds to 2 minutes):
 
@@ -50,7 +50,7 @@ Note how each tip maps to one short paragraph. Keep tip 4 tight — it's the lan
 
 ---
 
-## "Why are you the right fit for this role?" / 为什么你适合这个岗位？
+## "Why are you the right fit for this role?"
 
 Some tips shape the **content** of the answer; two shape the **delivery** — split them: content
 tips go in the AI answer, delivery tips go in the Strategy field as live coaching.
@@ -87,7 +87,7 @@ yourself — conviction lands harder than a polished script."
 
 ---
 
-## "Where do you see yourself in 5 years?" / 五年后你希望做到什么？
+## "Where do you see yourself in 5 years?"
 
 A 3-part structure:
 
@@ -152,7 +152,7 @@ Learning. Pick a story that shows the competency this question is really testing
 
 ---
 
-## "What is your biggest weakness?" / 你最大的弱点是什么？
+## "What is your biggest weakness?"
 
 A fill-in-the-blank growth arc. The key move: describe the **behaviour that exhibits** the
 weakness (not just an abstract label), then self-awareness → fix → positive result. Pick a
@@ -181,7 +181,7 @@ self-awareness → the fix → a concrete better result. Avoid humble-brags like
 
 ---
 
-## "Why did you leave / why are you leaving?" / 为什么离开？
+## "Why did you leave / why are you leaving?"
 
 Pick the variant matching the candidate's real situation. The universal shape is the same:
 **(1) state the reason briefly and neutrally — never bitter, never badmouth → (2) distance it
@@ -227,7 +227,7 @@ growth toward something, not escape from something."
 
 ---
 
-## "Tell me about a time you failed" / 讲一次你失败的经历
+## "Tell me about a time you failed"
 
 A behavioral question (use the CARL spine) with three failure-specific moves on top:
 
@@ -260,7 +260,7 @@ The learning is the whole point — don't skip it."
 
 ---
 
-## "What is your greatest strength?" / 你最大的优势是什么？
+## "What is your greatest strength?"
 
 The one rule: **pick a strength with DIRECT application to this job.** Everything else follows.
 

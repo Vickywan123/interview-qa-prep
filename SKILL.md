@@ -8,8 +8,7 @@ description: >-
   Use this whenever someone is preparing for a job interview and gives you a JD (link,
   pasted text, or file) and any description of their background, or asks to "build
   interview questions", "prep me for this interview", "make an interview question bank",
-  "generate likely interview questions and answers", "help me practice for this role",
-  "面试准备", "帮我准备面试", "生成面试题" — even if they don't explicitly ask for an HTML
+  "generate likely interview questions and answers", "help me practice for this role" — even if they don't explicitly ask for an HTML
   tool. Produce the tool by default; it is the deliverable.
 ---
 
@@ -120,7 +119,7 @@ they know their real process, you're proposing a well-researched default. Show, 
 English JD at a multinational may still interview in the local language, and many processes are
 **mixed** (recall a China/APAC role where the local-manager round is in Mandarin but the global
 round is in English). Ask explicitly, e.g. "What language will the interview be in — English,
-中文, or mixed by round?" If it varies by round, note which round is which language.
+Chinese, or mixed by round?" If it varies by round, note which round is which language.
 
 **In the same step, confirm the baseline scale** — how many of the common questions to include.
 Offer three choices (the role-specific questions from step 3/5 are always added *on top* of
