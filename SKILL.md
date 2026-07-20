@@ -210,6 +210,14 @@ These coverage areas map directly onto the `grp` themes — almost every bank co
 - **`company`** — Company & industry (product, market, competitors — some requiring homework).
 - **`cat:"F"`** — Questions to ask the interviewer (the reverse questions the candidate asks).
 
+**Minimum 5 questions per theme.** Every generation must give **each** theme — `intro`,
+`experience`, `behavioral`, `craft`, `company` — **at least 5 substantive questions**, and at
+least 5 questions-to-ask (`cat:"F"`) too. No thin sections. The two that tend to come out thin
+are `experience` (see above — one top-level question per project/role) and `company` — for
+`company`, get to 5 with *real* questions (their product, competitors, market, ideal customer,
+GTM, recent news, why-them-specifically), never filler. If you genuinely can't find 5 real
+questions for a theme, that's a signal to research the role/company more, not to pad.
+
 **Follow-ups matter.** Real interviewers rarely accept the first answer. For every
 substantial question, add 1–3 follow-ups in that question's **`fu` field** (one per line).
 Do **not** create separate `par` questions for follow-ups — they live inside the parent, and
