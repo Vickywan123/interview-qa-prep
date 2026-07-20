@@ -561,10 +561,22 @@ const _BASE={}; DATA.forEach(function(x,i){ _BASE[x.id]=i*100; });
 function baseIdx(id){ return (_BASE[id]!==undefined)?_BASE[id]:900000; }
 function effOrd(it){ return (EDITS.ord[it.id]!==undefined)?EDITS.ord[it.id]:baseIdx(it.id); }
 var dragId=null;
+/* auto-scroll the window when a drag hovers near the top/bottom edge of the viewport */
+var _scrollVel=0, _scrollRAF=null;
+function _autoScrollLoop(){ if(!_scrollVel){ _scrollRAF=null; return; }
+  window.scrollBy(0,_scrollVel); _scrollRAF=requestAnimationFrame(_autoScrollLoop); }
+function _edgeScroll(e){ var y=e.clientY, h=window.innerHeight, edge=80, max=20;
+  if(y<edge) _scrollVel=-Math.ceil(max*(1-y/edge));
+  else if(y>h-edge) _scrollVel=Math.ceil(max*(1-(h-y)/edge));
+  else _scrollVel=0;
+  if(_scrollVel && !_scrollRAF) _scrollRAF=requestAnimationFrame(_autoScrollLoop); }
+function _stopEdgeScroll(){ _scrollVel=0; if(_scrollRAF){ cancelAnimationFrame(_scrollRAF); _scrollRAF=null; }
+  document.removeEventListener("dragover",_edgeScroll); }
 function dragStart(e,id){ dragId=id; try{e.dataTransfer.setData("text/plain",id);}catch(_){}
   if(e.dataTransfer) e.dataTransfer.effectAllowed="move";
+  document.addEventListener("dragover",_edgeScroll);
   var c=document.getElementById("c-"+id); if(c) setTimeout(function(){c.classList.add("dragging");},0); }
-function dragEnd(e){ var c=dragId&&document.getElementById("c-"+dragId); if(c)c.classList.remove("dragging");
+function dragEnd(e){ _stopEdgeScroll(); var c=dragId&&document.getElementById("c-"+dragId); if(c)c.classList.remove("dragging");
   var zs=document.querySelectorAll(".zone.dragover"); for(var i=0;i<zs.length;i++) zs[i].classList.remove("dragover"); dragId=null; }
 function dragOverZone(e){ e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect="move"; e.currentTarget.classList.add("dragover"); }
 function dragLeaveZone(e){ if(e.currentTarget.contains(e.relatedTarget)) return; e.currentTarget.classList.remove("dragover"); }
