@@ -2,9 +2,9 @@
 name: interview-qa-prep
 description: >-
   Turn a job description plus the candidate's resume/background into an interactive,
-  editable HTML interview Q&A prep app: a categorized question bank where every question
-  carries a strategy, a draft answer, likely follow-ups, an interview-round tag, and a
-  priority — all filterable, sortable, and editable in the browser with autosave.
+  editable HTML interview Q&A prep app: a question bank grouped by interview theme where
+  every question carries a strategy, a draft answer, likely follow-ups, and an interview-round
+  tag — all filterable, sortable, and editable in the browser with autosave.
   Use this whenever someone is preparing for a job interview and gives you a JD (link,
   pasted text, or file) and any description of their background, or asks to "build
   interview questions", "prep me for this interview", "make an interview question bank",
@@ -23,14 +23,15 @@ opens in any browser, no internet needed, that they can filter, sort, edit, and 
 - A **home page that is the interview pipeline**: one card per interview round (badge, who
   runs it, duration, question count, focus, must-prep/mastered counts) in a top-to-bottom flow
   with connectors — tap a round to see its questions, or "Browse all". This is the landing view.
-- A **question bank** organized by **priority** (Must prep / Important / If time) — no category
-  labels or letter IDs — with a sidebar (a slide-in drawer on mobile) to filter by interview
-  round, priority, and a high-risk toggle, plus search.
+- A **question bank** grouped into **interview-theme sections** (Intro & motivation, Experience,
+  Behavioral, Role skills, Company & industry, and Questions to ask) in a natural interview
+  order — no priority, no letter IDs — with a sidebar (a slide-in drawer on mobile) to filter by
+  interview round, a high-risk toggle, and a "Questions to ask" toggle, plus search. Drag any
+  question to reorder it (the candidate's own way to prioritize).
 - Each question opens as its **own full-page view** (not a cramped accordion) with five
   editable sections: **Strategy**, **Bullet points**, **AI answer**, **My answer**,
-  **Follow-up questions**, plus per-question **round** checkboxes (one per interview round)
-  and a **priority** selector (P1/P2/P3). Priority and rounds are also editable inline from
-  the list.
+  **Follow-up questions**, plus per-question **round** checkboxes (one per interview round),
+  also editable inline from the list.
 - Everything the builder writes is a **default layer**. The moment the user edits a field,
   their text is saved to the browser's localStorage and overrides the default forever —
   so regenerating the file never destroys their work. They also get **Export all (.md)**
@@ -47,7 +48,7 @@ Two gates, otherwise automatic: **(1)** if the candidate's background is missing
 **(2)** confirm the interview *process* (rounds, who, goal), the interview *language*, **and how
 many common baseline questions to include** (see the scale choice in step 4) before generating,
 because different job families interview completely differently and a wrong process shape wastes
-the whole output. Everything else — questions, answers, priorities — you generate without
+the whole output. Everything else — questions, answers, themes — you generate without
 stopping; the user refines in the app.
 
 ### 1. Gather inputs (gate 1)
@@ -161,26 +162,26 @@ résumé/portfolio-specific questions (step 5) on top. The total is baseline + r
 "~20 common" plus, say, 30–50 role/résumé questions is a full, substantial bank. Assign each
 question to the round(s) it actually belongs in (step 4), and size each round by its real length.
 
-**The only two things you assign per question are its interview round(s) and its priority.**
-Every question gets `rounds` (R1 / R2 / R3 / R4 … — step 4) and a `pri` (Must prep / Important /
-If time). Those are the *only* two organizing dimensions — the app groups the bank by priority
-and filters it by round, and that's it. Everything else about a question (wording, answer,
-which round, which priority) is the **user's to edit afterward**; you just give a strong,
-complete starting point.
+**The two things you assign per question are its interview round(s) and its theme (`grp`).**
+Every normal question gets `rounds` (R1 / R2 / R3 / R4 … — step 4) and a `grp` — one of a small
+fixed set of interview themes: **`intro`** (Intro & motivation), **`experience`** (Experience
+deep-dive), **`behavioral`**, **`craft`** (Role skills), **`company`** (Company & industry). The
+app groups the bank into those theme **sections in that fixed order** — so it reads like a natural
+interview flow — and filters it by round. **There is no priority** (no P1/P2/P3, no Must prep) — if
+a candidate wants to prioritize, they just drag questions to reorder. Everything else about a
+question (wording, answer, round, theme) is the **user's to edit afterward**; you just give a
+strong, complete starting point.
 
-**Do NOT split the bank into labeled categories.** There are no A/B/C/D groupings and no
-category letters — every normal question is `cat:"Q"`. The topic areas below are a **coverage
-checklist** to make sure the bank is complete, *not* headings shown to the user. Write the
-questions in a natural thematic order (intro first, then experience, then behavioral, then craft,
-then company); within each priority tier the app keeps that authored order, so a sensible flow
-falls out on its own.
+**Do NOT use A/B/C/D letters or per-run category names.** The `grp` themes are a fixed set — you
+don't invent new ones. Assign each question the theme it truly belongs to (a weakness question is
+`behavioral`, a "why this company" is `intro`, a system-design question is `craft`, etc.). Write
+questions within a theme in a sensible order; the app keeps that authored order inside each section.
 
-**The one exception — "Questions to ask the interviewer" use `cat:"F"`.** These are the reverse
+**"Questions to ask the interviewer" use `cat:"F"` (not a `grp`).** These are the reverse
 questions the *candidate* asks (not questions they answer). Mark each one `cat:"F"` and the app
-automatically pulls them out of the priority tiers into a dedicated "🙋 Questions to ask" section
-with its own sidebar toggle. Give them a `rounds` value (so they sort by which round to ask in)
-and a `pri`; their `ai` field is just the question phrased ready to say out loud (no model answer).
-Everything else stays `cat:"Q"`.
+pulls them into a dedicated "🙋 Questions to ask" section at the end, with its own sidebar toggle.
+Give them a `rounds` value (so they sort by which round to ask in); their `ai` field is just the
+question phrased ready to say out loud (no model answer). Everything else stays `cat:"Q"` with a `grp`.
 
 Cover the areas that fit the job family:
 
@@ -193,15 +194,17 @@ Cover the areas that fit the job family:
 - **Marketing / Sales / others** — the craft competencies named in the JD, asked as
   "how do you…" and "walk me through…".
 
-Whatever the family, almost every bank covers: **Intro & motivation** (tell me about
-yourself, why this role/company, why leaving, gaps, salary), **Experience / portfolio
-deep-dive** (one cluster per major project or piece, with follow-ups drilling into specifics —
-their exact role vs the team's, the real numbers, what they'd change — *this is where most
-interviews are won or lost*), **Behavioral** (disagreement, failure, conflict, ambiguity,
-weakness), the **role-specific craft** above, **Company & industry** (product,
-market, competitors — some requiring homework), and **Questions to ask** (the reverse questions
-the candidate asks — mark these `cat:"F"`; the app gives them their own section). These are
-coverage areas to hit; only "Questions to ask" is a visible section (via `cat:"F"`).
+These coverage areas map directly onto the `grp` themes — almost every bank covers all of them:
+- **`intro`** — Intro & motivation (tell me about yourself, why this role/company, why leaving,
+  gaps, salary, 5 years, first-90-days).
+- **`experience`** — Experience / portfolio deep-dive (one cluster per major project or piece,
+  with follow-ups drilling into specifics — their exact role vs the team's, the real numbers,
+  what they'd change — *this is where most interviews are won or lost*).
+- **`behavioral`** — disagreement, failure, conflict, ambiguity, weakness, strength, influence.
+- **`craft`** — the role-specific skill questions above (coding, system design, product sense,
+  funnel analysis, etc.).
+- **`company`** — Company & industry (product, market, competitors — some requiring homework).
+- **`cat:"F"`** — Questions to ask the interviewer (the reverse questions the candidate asks).
 
 **Follow-ups matter.** Real interviewers rarely accept the first answer. For every
 substantial question, add 1–3 follow-ups in that question's **`fu` field** (one per line).
@@ -261,16 +264,17 @@ number or a name you can't invent, write the surrounding answer and leave an exp
 placeholder like `[Fill in the exact D7 retention number before the interview]`. Honest
 placeholders beat fabricated specifics — in the AI answer *and* the bullet points.
 
-### 8. Assign rounds and priority
+### 8. Assign rounds and theme
 
 - **`rounds`** — which interview rounds each question fits (using the round numbers you
   confirmed in step 4). Screening/motivation → early rounds; deep craft and problem-solving →
   later rounds; verification of resume claims → whoever can actually check (often the hiring
   manager who knows the space).
-- **`pri`** — `P1` must-prep (asked in almost any version of this interview, or a landmine),
-  `P2` important (likely, and you have material), `P3` if-time (lower frequency or easy to
-  improvise). Be honest — if everything is P1, nothing is. The app groups the whole bank by
-  priority (this is the only grouping), so this ordering is what the user studies down.
+- **`grp`** — the interview theme: `intro` / `experience` / `behavioral` / `craft` / `company`
+  (or `cat:"F"` for questions-to-ask). This is the only grouping — the app renders the bank as
+  theme sections in that order, so it reads like a real interview. Assign the theme each question
+  genuinely belongs to; don't invent new theme names. **No priority** — the candidate drags to
+  reorder if they want to prioritize.
 
 ### 9. Build and deliver
 
@@ -282,7 +286,7 @@ python3 scripts/build.py spec.json "<Company>_Interview_Prep.html"
 
 Save the output where the user can find it (the Desktop is a good default on a personal
 machine, or ask). Then tell them, briefly:
-- what they got (a question bank they can filter/edit, N questions, the P1 count),
+- what they got (a question bank they can filter/edit, N questions, the high-risk count),
 - that their edits autosave and survive re-generation,
 - to click **Backup edits (.json)** once in a while, and **Export all (.md)** to send you
   the whole thing if they want you to revise it later,
@@ -296,8 +300,8 @@ The exact spec JSON schema is documented at the top of `scripts/build.py` and in
 - **The app shell carries a considered, tested design — don't re-design it per run.** The
   template ("Interview War-Room" design): a masthead with a company logo mark + title, a home
   page that lays out the interview rounds as a pipeline (the landing view), a left sidebar of
-  filters (round / priority / high-risk) that becomes a slide-in drawer on mobile,
-  inline-editable priority/round chips, drag-to-reorder, and a full-page detail view. Navy/slate
+  filters (round / high-risk / questions-to-ask) that becomes a slide-in drawer on mobile,
+  inline-editable round chips, drag-to-reorder, and a full-page detail view. Navy/slate
   palette, serif headers, responsive and theme-aware. Generating good-looking output is the
   template's job — do **not** invoke a frontend-design pass or hand-roll HTML per generation;
   that produces inconsistent, untested results. Your effort goes into content quality.

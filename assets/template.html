@@ -120,9 +120,6 @@ main{flex:1;min-width:0}
 .subhead{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
   margin:16px 0 4px;display:flex;align-items:center;gap:7px}
 .subhead::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
-.subhead.sp-P1::before{background:var(--risk)} .subhead.sp-P1{color:var(--risk)}
-.subhead.sp-P2::before{background:var(--p2)} .subhead.sp-P2{color:var(--p2)}
-.subhead.sp-P3::before{background:var(--ok)} .subhead.sp-P3{color:var(--ok)}
 
 /* ---- cards ---- */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:11px;margin:9px 0;
@@ -256,10 +253,6 @@ h1{cursor:pointer}
   margin:16px 0 5px;display:flex;align-items:center;gap:7px}
 .zonehead::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
 .zonehead .zn{font-weight:400;letter-spacing:.02em;text-transform:none}
-.zonehead.z-P1{color:var(--risk)} .zonehead.z-P1::before{background:var(--risk)}
-.zonehead.z-P2{color:var(--p2)} .zonehead.z-P2::before{background:var(--p2)}
-.zonehead.z-P3{color:var(--ok)} .zonehead.z-P3::before{background:var(--ok)}
-.zonehead.z-none{color:var(--muted)}
 .zone-empty{border:1px dashed var(--line);border-radius:9px;color:var(--muted);font-size:12px;
   padding:11px 12px;text-align:center;margin:2px 0}
 .card.dragging{opacity:.4}
@@ -378,7 +371,7 @@ const JD_HTML = `__JD__`;
 const SK="__STOREKEY__", K_EDITS=SK+"_edits", K_DONE=SK+"_done", K_LAST=SK+"_last";
 const EDITS = (()=>{
   const d = JSON.parse(localStorage.getItem(K_EDITS)||"{}");
-  for(const k of ["st","bp","ai","my","qt","fu","rounds","pri","add","del","ord"]) d[k]=d[k]||{};
+  for(const k of ["st","bp","ai","my","qt","fu","rounds","grp","add","del","ord"]) d[k]=d[k]||{};
   return d;
 })();
 const doneSet = new Set(JSON.parse(localStorage.getItem(K_DONE)||"[]"));
@@ -417,10 +410,10 @@ function exportEdits(){
 function exportAll(){
   const lines=["# "+document.title+" — Full Export","","Exported: "+new Date().toISOString().slice(0,16).replace("T"," "),""];
   for(const it of allQ()){
-    const p=effPri(it).trim();
+    const g=it.cat==="F"?"Questions to ask":(GRP_LABEL[effGrp(it)]||"");
     lines.push("## "+it.id+" · "+effQ(it));
     lines.push("Rounds: "+effRounds(it).map(r=>"R"+r).join(", ")
-      +(p?" | Priority: "+p:"")
+      +(g?" | "+g:"")
       +(it.status==="risk"?" | HIGH-RISK":"")
       +(doneSet.has(it.id)?" | MASTERED":""));
     const secs=[["Strategy","st"],["Bullet points","bp"],["AI answer","ai"],["My answer","my"],["Follow-up questions","fu"]];
@@ -438,7 +431,7 @@ function importEdits(inp){
   const file=inp.files[0]; if(!file) return;
   file.text().then(t=>{ const d=JSON.parse(t);
     (d.done||[]).forEach(x=>doneSet.add(x));
-    for(const k of ["st","bp","ai","my","qt","fu","rounds","pri","add","del","ord"]) Object.assign(EDITS[k], d[k]||{});
+    for(const k of ["st","bp","ai","my","qt","fu","rounds","grp","add","del","ord"]) Object.assign(EDITS[k], d[k]||{});
     saveDone(); persist(); inp.value=""; render(); });
 }
 
@@ -489,7 +482,7 @@ function openFu(parId, idx){
 function deleteQuestion(id){
   if(!confirm("Delete this question? This cannot be undone.")) return;
   if(EDITS.add[id]) delete EDITS.add[id]; else EDITS.del[id]=true;
-  for(const k of ["st","bp","ai","my","qt","fu","rounds","pri"]) delete EDITS[k][id];
+  for(const k of ["st","bp","ai","my","qt","fu","rounds","grp"]) delete EDITS[k][id];
   doneSet.delete(id); if(detailId===id) detailId=null;
   saveDone(); persist(); render();
 }
@@ -497,7 +490,7 @@ function deleteQuestion(id){
 /* ---------- effective values (edit overrides > defaults) ---------- */
 function effRounds(it){ return EDITS.rounds[it.id] || it.rounds; }
 function effQ(it){ return (EDITS.qt[it.id]||"").trim() || it.q; }
-function effPri(it){ return EDITS.pri[it.id]!==undefined ? EDITS.pri[it.id] : (it.pri||""); }
+function effGrp(it){ var g=(EDITS.grp[it.id]!==undefined)?EDITS.grp[it.id]:(it.grp||""); return GRP_LABEL[g]?g:"experience"; }
 function defVal(kind,it){ return kind==="st"?(it.st||""):kind==="ai"?(it.ai||""):kind==="fu"?(it.fu||""):""; }
 function effVal(kind,it){ return (it.id in EDITS[kind]) ? EDITS[kind][it.id] : defVal(kind,it); }
 function editQ(id,v){ saveF("qt",id,v); }
@@ -509,23 +502,9 @@ function setQRound(id,r,checked){
   if(arr.join()===it.rounds.join()) delete EDITS.rounds[id]; else EDITS.rounds[id]=arr;
   persist(); render();
 }
-function cyclePri(id){
-  const it=findQ(id);
-  const next={P1:"P2",P2:"P3",P3:"P1"}[effPri(it).trim()]||"P1";
-  if(next===(it.pri||"")) delete EDITS.pri[id]; else EDITS.pri[id]=next;
-  persist(); render();
-}
-function setPri(id,p){
-  const it=findQ(id);
-  const cur=effPri(it).trim();
-  const next = cur===p ? "" : p;
-  if(next===(it.pri||"")) delete EDITS.pri[id]; else EDITS.pri[id]=next;
-  delete EDITS.ord[id];
-  persist(); render();
-}
 
 /* ---------- state ---------- */
-let page="home", catSel="all", roundSel=0, priSel="all", riskOnly=false, askOnly=false, q="", detailId=null;
+let page="home", catSel="all", roundSel=0, riskOnly=false, askOnly=false, q="", detailId=null;
 let jdReturn="home";
 function setPage(p){page=p;detailId=null;closeDrawerIfMobile();render()}
 function toggleJD(){ if(page==="jd"){ page=jdReturn||"home"; } else { jdReturn=page; page="jd"; } detailId=null; closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
@@ -534,7 +513,6 @@ function updateJdBtn(){ var b=document.getElementById("jdbtn"); if(!b) return;
   else { b.textContent="Job Description"; b.classList.remove("active"); } }
 function setCat(c){catSel=c;page="q";detailId=null;closeDrawerIfMobile();render()}
 function setRound(r){roundSel=r;page="q";detailId=null;closeDrawerIfMobile();render()}
-function setPriFilter(p){priSel=p;page="q";detailId=null;closeDrawerIfMobile();render()}
 function toggleRisk(v){riskOnly=v;page="q";detailId=null;closeDrawerIfMobile();render()}
 function toggleAsk(v){askOnly=v;page="q";detailId=null;closeDrawerIfMobile();render()}
 
@@ -551,13 +529,7 @@ function renderSide(){
   document.getElementById("g-round").innerHTML = `<h5>Round</h5>`+
     sbtn(roundSel===0,"setRound(0)","All rounds")+
     RKEYS.map(r=>sbtn(roundSel===r,`setRound(${r})`,ROUNDS[r],rCounts[r])).join("");
-  const pCount=p=>base.filter(x=>effPri(x).trim()===p).length;
-  document.getElementById("g-pri").innerHTML = askOnly ? "" : `<h5>Priority</h5>`+
-    sbtn(priSel==="all","setPriFilter('all')","All")+
-    sbtn(priSel==="P1","setPriFilter('P1')","Must prep",pCount("P1"))+
-    sbtn(priSel==="P2","setPriFilter('P2')","Important",pCount("P2"))+
-    sbtn(priSel==="P3","setPriFilter('P3')","If time",pCount("P3"))+
-    sbtn(priSel==="none","setPriFilter('none')","Unsorted",base.filter(x=>!effPri(x).trim()).length);
+  document.getElementById("g-pri").innerHTML = "";
   document.getElementById("g-flags").innerHTML = `<h5>Filters</h5>`+
     `<label class="stog"><input type="checkbox" ${riskOnly?"checked":""} onchange="toggleRisk(this.checked)">🔴 High-risk only</label>`+
     `<label class="stog"><input type="checkbox" ${askOnly?"checked":""} onchange="toggleAsk(this.checked)">🙋 Questions to ask only</label>`;
@@ -575,28 +547,19 @@ function matchBase(it){
   }
   return true;
 }
-function match(it){
-  if(!matchBase(it)) return false;
-  const p=effPri(it).trim();
-  if(priSel!=="all"){
-    if(priSel==="none"){ if(p) return false; }
-    else if(p!==priSel) return false;
-  }
-  return true;
-}
-function rank(x){ return {P1:1,P2:2,P3:3}[effPri(x).trim()]||4; }
-const CATORDER={A:1,B:2,C:3,D:4,E:5,F:6};
+function match(it){ return matchBase(it); }
 function shownList(){
-  return allQ().filter(match).sort((a,b)=> CATORDER[a.cat]-CATORDER[b.cat] || rank(a)-rank(b) || effOrd(a)-effOrd(b));
+  return allQ().filter(match).sort((a,b)=>
+    (GRP_ORDER.indexOf(effGrp(a))-GRP_ORDER.indexOf(effGrp(b))) || effOrd(a)-effOrd(b));
 }
 
-/* ---------- priority tiers + drag-and-drop ---------- */
+/* ---------- theme sections + drag-and-drop ---------- */
 const GRIP='<svg width="12" height="16" viewBox="0 0 12 16" fill="currentColor"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg>';
-const TIERS={P1:"Must prep",P2:"Important",P3:"If time",none:"Unsorted"};
+const GRP_ORDER=["intro","experience","behavioral","craft","company"];
+const GRP_LABEL={intro:"Intro & motivation",experience:"Experience",behavioral:"Behavioral",craft:"Role skills",company:"Company & industry"};
 const _BASE={}; DATA.forEach(function(x,i){ _BASE[x.id]=i*100; });
 function baseIdx(id){ return (_BASE[id]!==undefined)?_BASE[id]:900000; }
 function effOrd(it){ return (EDITS.ord[it.id]!==undefined)?EDITS.ord[it.id]:baseIdx(it.id); }
-function tierKey(it){ var p=effPri(it).trim(); return p||"none"; }
 var dragId=null;
 function dragStart(e,id){ dragId=id; try{e.dataTransfer.setData("text/plain",id);}catch(_){}
   if(e.dataTransfer) e.dataTransfer.effectAllowed="move";
@@ -605,7 +568,7 @@ function dragEnd(e){ var c=dragId&&document.getElementById("c-"+dragId); if(c)c.
   var zs=document.querySelectorAll(".zone.dragover"); for(var i=0;i<zs.length;i++) zs[i].classList.remove("dragover"); dragId=null; }
 function dragOverZone(e){ e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect="move"; e.currentTarget.classList.add("dragover"); }
 function dragLeaveZone(e){ if(e.currentTarget.contains(e.relatedTarget)) return; e.currentTarget.classList.remove("dragover"); }
-function dropZone(e,tier){ e.preventDefault(); var z=e.currentTarget; z.classList.remove("dragover");
+function dropZone(e,grp){ e.preventDefault(); var z=e.currentTarget; z.classList.remove("dragover");
   var id=dragId||(e.dataTransfer&&e.dataTransfer.getData("text/plain")); if(!id) return;
   var it=findQ(id); if(!it) return;
   var cards=[].slice.call(z.querySelectorAll(".card")).filter(function(el){return el.id!=="c-"+id;});
@@ -615,20 +578,11 @@ function dropZone(e,tier){ e.preventDefault(); var z=e.currentTarget; z.classLis
   var leftO = idx>0 ? effOrd(items[idx-1]) : (items.length? effOrd(items[0])-100 : 0);
   var rightO = idx<items.length ? effOrd(items[idx]) : (items.length? effOrd(items[items.length-1])+100 : 100);
   EDITS.ord[id]=(leftO+rightO)/2;
-  var np=(tier==="none")?"":tier;
-  if(np===(it.pri||"")) delete EDITS.pri[id]; else EDITS.pri[id]=np;
+  if(GRP_LABEL[grp]){ if(grp===(it.grp||"")) delete EDITS.grp[id]; else EDITS.grp[id]=grp; }
   touch(id); persist(); render();
 }
 
 /* ---------- list ---------- */
-function priBadge(it){
-  const cur=effPri(it).trim();
-  return `<span class="pgroup">`+["P1","P2","P3"].map(p=>{
-    const on=cur===p;
-    return `<span class="b ${on?p.toLowerCase():"poff"}" title="Set ${p}"
-      onclick="event.stopPropagation();setPri('${it.id}','${p}')">${p}</span>`;
-  }).join("")+`</span>`;
-}
 function metaBadges(it){
   let b=RKEYS.map(r=>{
     const on=effRounds(it).includes(r);
@@ -645,7 +599,7 @@ function cardHTML(it,seq){
   const kidChip = fuN?`<span class="b parb" style="margin-top:3px" title="${fuN} follow-up question${fuN>1?"s":""}">↳ ${fuN} follow-up${fuN>1?"s":""}</span>`:"";
   return `<div class="card ${it.status==="risk"?"risk":""} ${doneSet.has(it.id)?"done":""} ${it.id===lastId?"last":""}" id="c-${it.id}" draggable="true" ondragstart="dragStart(event,'${it.id}')" ondragend="dragEnd(event)">
     <div class="qrow" onclick="openDetail('${it.id}')">
-      <span class="grip" title="Drag to change priority">${GRIP}</span>
+      <span class="grip" title="Drag to reorder">${GRIP}</span>
       <span class="qtext">${esc(effQ(it))}</span>${parChip}${kidChip}
       <span class="badges">${metaBadges(it)}</span>
       <button class="rowdel" title="Delete question" onclick="event.stopPropagation();deleteQuestion('${it.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg></button>
@@ -683,10 +637,7 @@ function detailHTML(it){
   b+=`<div class="metarow">`+
     RKEYS.map(r=>`<label class="rchk"><input type="checkbox" ${effRounds(it).includes(r)?"checked":""}
       onchange="setQRound('${it.id}',${r},this.checked)">R${r}</label>`).join("")+
-    `<span class="pbtns">`+
-    ["P1","P2","P3"].map((p,i2)=>`<button class="pbtn ${effPri(it).trim()===p?("on"+(i2+1)):""}"
-      onclick="setPri('${it.id}','${p}')">${p==="P1"?"Must prep":p==="P2"?"Important":"If time"}</button>`).join("")+
-    `</span></div>`;
+    `</div>`;
   { const v=effVal("st",it); if(v.trim()) b+=`<h4>Strategy</h4><div class="rodisp">${esc(v)}</div>`; }
   { const v=effVal("ai",it); if(v.trim()) b+=`<h4>AI answer <span class="rohint">— reference; write your own below</span></h4><div class="rodisp">${esc(v)}</div>`; }
   b+=`<h4>Bullet points</h4>`+ta("bp",it,"Your quick-recall points — one per line…");
@@ -727,9 +678,9 @@ function roundMeta(){ var m={};
  }); return m;}
 function renderHome(){
   var META=roundMeta(), Q=allQ().filter(function(x){return x.cat!=="F";});
-  var counts={}, done={}, p1={}; RKEYS.forEach(function(r){counts[r]=0;done[r]=0;p1[r]=0;});
+  var counts={}, done={}, risk={}; RKEYS.forEach(function(r){counts[r]=0;done[r]=0;risk[r]=0;});
   Q.forEach(function(x){ effRounds(x).forEach(function(r){ counts[r]++;
-    if(doneSet.has(x.id)) done[r]++; if(effPri(x).trim()==="P1") p1[r]++; }); });
+    if(doneSet.has(x.id)) done[r]++; if(x.status==="risk") risk[r]++; }); });
   var curR = lastRound ? parseInt(lastRound,10) : null;   // the round the user last entered
   var html='<div class="rounds"><p class="rhint">4 interview rounds &middot; tap a round to see its questions</p>';
   RKEYS.forEach(function(r,i){
@@ -743,7 +694,7 @@ function renderHome(){
       '<p class="rfocus">Focus: '+m.focus+'</p>'+
       '<div class="rmeta">'+
         '<span class="rlink">'+counts[r]+' questions &rarr;</span>'+
-        (p1[r]?'<span class="rp1">'+p1[r]+' must-prep</span>':'')+
+        (risk[r]?'<span class="rp1">'+risk[r]+' high-risk</span>':'')+
         (done[r]?'<span class="rdone">'+done[r]+' mastered</span>':'')+
       '</div></div>';
     if(i<RKEYS.length-1) html+='<div class="rconnector">&darr;</div>';
@@ -752,7 +703,7 @@ function renderHome(){
   document.getElementById("list").innerHTML=html;
 }
 function goHome(){ page="home"; detailId=null; roundSel=0; closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
-function openRound(r){ page="q"; roundSel=r; catSel="all"; priSel="all"; riskOnly=false; detailId=null; touchRound(r); closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
+function openRound(r){ page="q"; roundSel=r; catSel="all"; riskOnly=false; detailId=null; touchRound(r); closeDrawerIfMobile(); render(); window.scrollTo({top:0}); }
 function browseAll(){ page="q"; roundSel=0; detailId=null; render(); window.scrollTo({top:0}); }
 
 /* ---------- chrome visibility (sidebar / search / add only in browse) ---------- */
@@ -772,9 +723,8 @@ function renderStats(){
   const answered=Object.keys(EDITS.my).length;
   document.getElementById("stats").innerHTML =
     `Showing <b>${shown.length}</b> of <b>${base.length}</b><br>`+
-    `My answers <b>${answered}</b> · Mastered <b>${doneSet.size}</b><br>`+
-    `Must-prep <b style="color:var(--risk)">${base.filter(x=>effPri(x).trim()==="P1").length}</b>`+
-    ` · High-risk <b style="color:var(--risk)">${risk}</b>`;
+    `My answers <b>${answered}</b> · Mastered <b>${doneSet.size}</b>`+
+    (risk?`<br>High-risk <b style="color:var(--risk)">${risk}</b>`:"");
 }
 function render(){
   renderSide(); renderStats(); updateFCount(); updateJdBtn(); updateChrome();
@@ -802,14 +752,12 @@ function render(){
     list.innerHTML=html; return;
   }
   if(!ans.length && !ask.length){ list.innerHTML=crumb+`<div class="empty">No questions here yet.</div>`; return; }
-  const tiers = (priSel!=="all") ? [priSel] : ["P1","P2","P3","none"];
-  for(const tier of tiers){
-    const items=ans.filter(function(x){return tierKey(x)===tier;}).sort(function(a,b){return effOrd(a)-effOrd(b);});
-    if(!items.length && (priSel!=="all" || tier==="none")) continue;
-    html+=`<div class="zone" data-tier="${tier}" ondragover="dragOverZone(event)" ondragleave="dragLeaveZone(event)" ondrop="dropZone(event,'${tier}')">`;
-    html+=`<div class="zonehead z-${tier}">${TIERS[tier]} <span class="zn">(${items.length})</span></div>`;
-    if(items.length){ for(const it of items){ seq++; html+=cardHTML(it,seq); } }
-    else { html+=`<div class="zone-empty">Drag a question here for &ldquo;${TIERS[tier]}&rdquo;</div>`; }
+  for(const grp of GRP_ORDER){
+    const items=ans.filter(function(x){return effGrp(x)===grp;}).sort(function(a,b){return effOrd(a)-effOrd(b);});
+    if(!items.length) continue;
+    html+=`<div class="zone" data-grp="${grp}" ondragover="dragOverZone(event)" ondragleave="dragLeaveZone(event)" ondrop="dropZone(event,'${grp}')">`;
+    html+=`<div class="sechead">${GRP_LABEL[grp]}<small>${items.length} question${items.length>1?"s":""}</small></div>`;
+    for(const it of items){ seq++; html+=cardHTML(it,seq); }
     html+=`</div>`;
   }
   if(ask.length) html+=askSection();
@@ -827,7 +775,7 @@ function openDrawer(){ document.getElementById("side").classList.add("open");
 function closeDrawer(){ document.getElementById("side").classList.remove("open");
   document.getElementById("backdrop").classList.remove("show"); document.body.style.overflow=""; }
 function closeDrawerIfMobile(){ if(window.matchMedia("(max-width:899px)").matches) closeDrawer(); }
-function updateFCount(){ var n=0; if(catSel!=="all")n++; if(roundSel!==0)n++; if(priSel!=="all")n++; if(riskOnly)n++; if(q)n++;
+function updateFCount(){ var n=0; if(roundSel!==0)n++; if(riskOnly)n++; if(askOnly)n++; if(q)n++;
   var el=document.getElementById("fcount"); if(el){ el.textContent=n||""; el.style.display=n?"inline-flex":"none"; } }
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"){
   if(document.getElementById("side").classList.contains("open")) closeDrawer();

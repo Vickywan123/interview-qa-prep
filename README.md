@@ -2,8 +2,8 @@
 
 A [Claude Code](https://claude.com/claude-code) skill that turns a **job description + a
 candidate's background** into a self-contained, **editable HTML interview Q&A prep app** — a
-categorized question bank where every question carries a strategy, a draft answer, likely
-follow-ups, an interview-round tag, and a priority. Everything is filterable, sortable, and
+question bank grouped by interview theme, where every question carries a strategy, a draft
+answer, likely follow-ups, and an interview-round tag. Everything is filterable, sortable, and
 editable right in the browser, with autosave. No internet needed once generated.
 
 The app is the deliverable: one HTML file the candidate opens in any browser.
@@ -18,6 +18,12 @@ The landing view is the interview pipeline — one card per round:
 
 ![Home — the interview pipeline](docs/assets/demo-home.png)
 
+Inside a round (or "browse all"), questions are grouped into interview-theme sections — Intro &
+motivation, Experience, Behavioral, Role skills, Company, and Questions to ask — in a natural
+interview order. Drag any card to reorder it:
+
+![Question bank grouped by interview theme](docs/assets/demo-list.png)
+
 Each question opens full-page with a strategy, a model answer to study, editable notes, and
 likely follow-ups:
 
@@ -27,11 +33,13 @@ likely follow-ups:
 
 - **Home page = the interview pipeline** — one card per round (who runs it, duration, question
   count, focus) in a top-to-bottom flow. Tap a round to see its questions, or browse all.
-- **Question bank** grouped by category, with a sidebar to filter by round, priority, and a
-  high-risk toggle, plus search. On mobile the sidebar is a slide-in drawer.
+- **Question bank** grouped into **interview-theme sections** (Intro & motivation, Experience,
+  Behavioral, Role skills, Company, Questions to ask) in a natural interview order — with a
+  sidebar to filter by round, a high-risk toggle, and a "Questions to ask" toggle, plus search.
+  Drag any card to reorder it. On mobile the sidebar is a slide-in drawer.
 - **Every question opens full-page** with five sections: **Strategy** and **AI answer**
   (read-only reference), plus **Bullet points**, **My answer**, and **Follow-up questions**
-  (editable). Round checkboxes and a P1/P2/P3 priority are editable inline.
+  (editable). Round checkboxes are editable inline.
 - **Your edits win, forever** — the generated content is a default layer; the moment you edit a
   field it saves to the browser's localStorage and overrides the default, so regenerating the
   file never destroys your work. Export the whole bank to Markdown, or back up / restore as JSON.

@@ -18,10 +18,10 @@ The spec JSON schema:
     {
       "id": "Q1",              # unique, flat sequential (Q1, Q2, …); internal key, never shown
       "cat": "Q",              # "Q" = normal question; "F" = reverse "question to ask the interviewer"
+      "grp": "intro",          # theme (cat "Q" only): intro|experience|behavioral|craft|company
       "q": "Tell me about yourself",
       "rounds": [1,2,3],       # which interview rounds this belongs to
       "status": "todo",        # "todo" or "risk" (risk = high-stakes, shown red)
-      "pri": "P1",             # "P1" | "P2" | "P3" | "" (must-prep / important / if-time)
       "par": "A0",             # optional: id of the parent question if this is a follow-up
       "st": "Strategy text...",       # how to approach the answer (1-3 sentences)
       "bp": "point 1\npoint 2...",    # 3-5 short scannable bullet points (optional)
@@ -156,10 +156,10 @@ def main():
         html = html.replace(k, v)
 
     out_path.write_text(html, encoding="utf-8")
-    n_p1 = sum(1 for q in questions if q.get("pri") == "P1")
+    n_ask = sum(1 for q in questions if q.get("cat") == "F")
     n_risk = sum(1 for q in questions if q.get("status") == "risk")
     print(f"Built {out_path}")
-    print(f"  {len(questions)} questions | {n_p1} P1 | {n_risk} high-risk")
+    print(f"  {len(questions)} questions | {n_ask} to-ask | {n_risk} high-risk")
 
 
 if __name__ == "__main__":
