@@ -12,6 +12,17 @@ The app is the deliverable: one HTML file the candidate opens in any browser.
 a (fictional) Marketing Strategy & Operations candidate. Try the round pipeline, filters, the
 "Questions to ask" section, and the editable detail view.
 
+## Screenshots
+
+The landing view is the interview pipeline — one card per round:
+
+![Home — the interview pipeline](docs/assets/demo-home.png)
+
+Each question opens full-page with a strategy, a model answer to study, editable notes, and
+likely follow-ups:
+
+![A question, opened](docs/assets/demo-detail.png)
+
 ## What you get
 
 - **Home page = the interview pipeline** — one card per round (who runs it, duration, question
