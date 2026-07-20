@@ -14,7 +14,7 @@ maps to these tiers:
 
 - **~10 (essentials)** → Tier 1
 - **~20 (thorough)** → Tier 1 + Tier 2
-- **~27 / all (exhaustive)** → Tier 1 + Tier 2 + Tier 3
+- **~26 / all (exhaustive)** → Tier 1 + Tier 2 + Tier 3
 
 Always adapt the wording and answer to the real candidate and target role; drop any that make
 no sense for the role, and never let a baseline question crowd out a strong role-specific one.
@@ -66,26 +66,27 @@ no sense for the role, and never let a baseline question crowd out a strong role
 20. **What was your salary in your last job? / salary expectations?** — Deflect to a desired range
     and ask if the role fits it; don't anchor on a past number.
 
-## Tier 3 — the remaining ~7 (situational + reverse questions to ask them)
+## Tier 3 — the remaining ~6 (situational + reverse questions to ask them)
 
-21. **Brain-teaser / puzzle** (e.g. "A snail climbs a 30-foot well…"). — They're testing your
-    reasoning out loud, not the answer. Think transparently.
-22. **What do you expect me to accomplish in the first 90 days?** *(reverse — ask them)* — Shows
+*(No brain-teaser / puzzle questions — they test little that matters and most companies have
+dropped them; don't generate them.)*
+
+21. **What do you expect me to accomplish in the first 90 days?** *(reverse — ask them)* — Shows
     you want to contribute fast and know the success metrics.
-23. **What three traits do your top performers share?** *(reverse)* — Learn what drives success
+22. **What three traits do your top performers share?** *(reverse)* — Learn what drives success
     here, then align.
-24. **What really drives results in this job?** *(reverse)* — Understand the highest-impact
+23. **What really drives results in this job?** *(reverse)* — Understand the highest-impact
     activities.
-25. **What are the company's highest-priority goals this year, and how would my role contribute?**
+24. **What are the company's highest-priority goals this year, and how would my role contribute?**
     *(reverse)* — Signals interest in meaningful work.
-26. **What percentage of employees were referred by current employees?** *(reverse)* — A read on
+25. **What percentage of employees were referred by current employees?** *(reverse)* — A read on
     culture and workplace quality.
-27. **What do you plan to do if [anticipated business challenge]?** — Forward-thinking; discuss how
+26. **What do you plan to do if [anticipated business challenge]?** — Forward-thinking; discuss how
     you'd handle a likely challenge for the team/company.
 
 ---
 
-**Reverse questions (#10 and 22–26) are "questions to ask the interviewer" — mark them `cat:"F"`**
+**Reverse questions (#10 and 21–25) are "questions to ask the interviewer" — mark them `cat:"F"`**
 so the app pulls them into the dedicated "🙋 Questions to ask" section. Phrase them ready-to-say
 (the `ai` field is just the question, no model answer). Everything else is a question *they* ask
 the candidate → `cat:"Q"`.

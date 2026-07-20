@@ -130,7 +130,7 @@ whichever they pick):
 > on top of any of these)?
 > - **~10 essentials** + role-specific — a focused, fast-to-prep bank
 > - **~20 thorough** + role-specific — solid coverage of the usual ground *(a good default)*
-> - **~27 / all common** + role-specific — exhaustive; leave nothing to chance
+> - **~26 / all common** + role-specific — exhaustive; leave nothing to chance
 
 Map their pick to the tiers in `references/common-questions.md` (~10 = Tier 1; ~20 = Tier 1+2;
 all = Tier 1+2+3). If they don't care, default to ~20.
