@@ -197,9 +197,13 @@ Cover the areas that fit the job family:
 These coverage areas map directly onto the `grp` themes — almost every bank covers all of them:
 - **`intro`** — Intro & motivation (tell me about yourself, why this role/company, why leaving,
   gaps, salary, 5 years, first-90-days).
-- **`experience`** — Experience / portfolio deep-dive (one cluster per major project or piece,
-  with follow-ups drilling into specifics — their exact role vs the team's, the real numbers,
-  what they'd change — *this is where most interviews are won or lost*).
+- **`experience`** — Experience / portfolio deep-dive. **This should be one of the biggest
+  sections, not an afterthought — it's where most interviews are won or lost.** Give each major
+  project, role, or achievement on the résumé its **own top-level question** (a general "walk me
+  through your background / your last role" plus one per significant piece). Do NOT bury the whole
+  deep-dive inside follow-ups — the probes (their exact role vs the team's, the real numbers, what
+  they'd change) go in `fu`, but the projects themselves are standalone `experience` questions. A
+  résumé-heavy role should have roughly 4–8 experience questions, comparable to craft and intro.
 - **`behavioral`** — disagreement, failure, conflict, ambiguity, weakness, strength, influence.
 - **`craft`** — the role-specific skill questions above (coding, system design, product sense,
   funnel analysis, etc.).
