@@ -26,7 +26,10 @@ The spec JSON schema:
       "st": "Strategy text...",       # how to approach the answer (1-3 sentences)
       "bp": "point 1\npoint 2...",    # 3-5 short scannable bullet points (optional)
       "ai": "Draft answer text...",   # the model-written answer
-      "fu": "Follow-up 1\nFollow-up 2"  # newline-separated follow-up questions (optional)
+      "fu": [                    # follow-up questions, each with a short prepared answer (optional)
+        {"q": "Follow-up question?", "ai": "A concise 2-4 sentence model answer."},
+        {"q": "Another follow-up?", "ai": "..."}
+      ]                          # (a plain "line1\nline2" string still works for bare probes)
     }
   ]
 }
@@ -70,10 +73,15 @@ def main():
         seen.add(qid)
         if q.get("cat") not in cats:
             sys.exit(f"question {qid} has cat={q.get('cat')!r} not in categories")
-        # normalize: strip empty optional fields so the page stays clean
-        for k in ("sub", "par", "st", "bp", "ai", "fu"):
+        # normalize: strip empty optional (string) fields so the page stays clean
+        for k in ("sub", "par", "st", "bp", "ai"):
             if k in q and not (q[k] or "").strip():
                 del q[k]
+        # fu may be a string (one per line) or a list of {q, st, ai, bp}; drop if empty
+        if "fu" in q:
+            fu = q["fu"]
+            if (isinstance(fu, str) and not fu.strip()) or (isinstance(fu, list) and not fu):
+                del q["fu"]
         q.setdefault("rounds", [])
         q.setdefault("status", "todo")
         if q.get("status") not in ("todo", "risk"):

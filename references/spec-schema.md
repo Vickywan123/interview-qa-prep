@@ -55,14 +55,14 @@ the Process page is hidden automatically.
 | `st`     | string    | no       | Strategy: how to approach the answer (1–3 sentences). |
 | `bp`     | string    | no       | Bullet points: 3–5 short scannable points distilled from the answer, one per line (`\n`-separated). The user edits these. |
 | `ai`     | string    | no       | The draft answer. Use `\n\n` between paragraphs. |
-| `fu`     | string    | no       | Follow-up questions, one per line (`\n`-separated). |
+| `fu`     | array     | no       | Follow-up questions, **each with its own short prepared answer** so opening one isn't blank. An array of `{"q": "...", "ai": "..."}` objects (`ai` = a concise 2–4-sentence model answer; `st`/`bp` optional). A plain `"line1\nline2"` string still works for bare probes with no prepared answer. |
 
 Do **not** set `my` (the user's own answer) — that field is the user's to fill in the browser.
 
 ## Escaping
 
 Write the JSON normally (as data). `build.py` handles JS-escaping when it injects `jd_html`
-into the page. In `ai`/`st`/`fu`, plain text is fine — newlines as `\n`. Don't pre-escape
+into the page. In `ai`/`st` (and each follow-up's `ai`), plain text is fine — newlines as `\n`. Don't pre-escape
 HTML entities; the app escapes text at render time.
 
 ## Minimal example
@@ -78,11 +78,15 @@ HTML entities; the app escapes text at render time.
   "questions": [
     {"id":"Q1","cat":"Q","grp":"intro","q":"Tell me about yourself","rounds":[1,2,3],
      "st":"Two minutes, clear arc: background → most relevant role → why this next.",
-     "ai":"I started in ①… then ②… which led me to ③…","fu":"Give the 30-second version.\nWhy this role?"},
+     "ai":"I started in ①… then ②… which led me to ③…",
+     "fu":[{"q":"Give the 30-second version.","ai":"A tight three-sentence version: what I do, my strongest proof point, why this role."},
+           {"q":"Why this role?","ai":"Tie the role's core to my track record and what I want to do next."}]},
     {"id":"Q2","cat":"Q","grp":"experience","q":"Walk me through your biggest launch","rounds":[2,3],
      "status":"risk",
      "st":"Story arc. Name your exact role vs the team's — they may probe it.",
-     "ai":"Context: … Action: … Result: … Learning: …","fu":"What was YOUR part vs the team?\nWhat would you do differently?"},
+     "ai":"Context: … Action: … Result: … Learning: …",
+     "fu":[{"q":"What was YOUR part vs the team's?","ai":"I owned ①②③; the team owned the build. Be specific — they'll probe vague 'we'."},
+           {"q":"What would you do differently?","ai":"Name one concrete change and what you learned — shows growth, not defensiveness."}]},
     {"id":"Q3","cat":"F","q":"What does success look like for this role in the first year?","rounds":[2,3],
      "st":"A reverse question you ASK the interviewer — cat \"F\" pulls it into the 'Questions to ask' section.",
      "ai":"(This is a question you ask them — phrase it ready to say out loud.)"}

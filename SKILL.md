@@ -218,14 +218,16 @@ are `experience` (see above — one top-level question per project/role) and `co
 GTM, recent news, why-them-specifically), never filler. If you genuinely can't find 5 real
 questions for a theme, that's a signal to research the role/company more, not to pad.
 
-**Follow-ups matter.** Real interviewers rarely accept the first answer. For every
-substantial question, add 1–3 follow-ups in that question's **`fu` field** (one per line).
-Do **not** create separate `par` questions for follow-ups — they live inside the parent, and
-in the app each follow-up line has a "＋ Prep as question" button so the user can promote any
-one into its own full card on demand. So even a high-stakes follow-up (e.g. a metric-level
-drill-down on a weak result) goes in the parent's `fu`; put a note in the parent's Strategy
-that it needs a strong answer, and the user promotes it if they want to prep it deeply. Carry
-the landmines from step 5 into the bank as `"status":"risk"` questions.
+**Follow-ups matter, and each one gets its own prepared answer.** Real interviewers rarely accept
+the first answer. For every substantial question, add 1–3 follow-ups in that question's **`fu`
+field** — as an **array of `{"q": "...", "ai": "..."}` objects**, where each `ai` is a **concise
+2–4 sentence model answer** (shorter than a main answer — a follow-up is a drill-down, not a fresh
+question). This way, when the user taps a follow-up to open it, it's already prepped, not blank.
+Do **not** create separate `par` questions for follow-ups — they live inside the parent, and in
+the app tapping a follow-up promotes it into its own full card (carrying its prepared answer) on
+demand. So even a high-stakes follow-up (e.g. a metric-level drill-down on a weak result) goes in
+the parent's `fu` with its own short answer. Carry the landmines from step 5 into the bank as
+`"status":"risk"` questions.
 
 ### 7. Write the content for each question
 
@@ -267,9 +269,9 @@ question; don't force one template onto everything.
   (one idea per line) — the at-a-glance version the user rehearses from. Keep them terse
   (fragments, not sentences). The user will edit these, so give a strong starting point, not
   a wall of text.
-- **Follow-up questions (`fu`)** — newline-separated. Write each as a plain question. **Never
-  add ID cross-references like `(→ B3)`** — question IDs are not shown anywhere in the app, so a
-  pointer to one only confuses the user.
+- **Follow-up questions (`fu`)** — an array of `{"q": "...", "ai": "..."}`: each follow-up's `q` is
+  the question and `ai` is a **concise 2–4 sentence model answer**. **Never add ID cross-references
+  like `(→ B3)`** — question IDs are not shown anywhere in the app.
 
 **Ground every answer in the candidate's *real* history.** When only the candidate knows a
 number or a name you can't invent, write the surrounding answer and leave an explicit

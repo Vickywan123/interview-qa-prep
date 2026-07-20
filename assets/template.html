@@ -416,11 +416,14 @@ function exportAll(){
       +(g?" | "+g:"")
       +(it.status==="risk"?" | HIGH-RISK":"")
       +(doneSet.has(it.id)?" | MASTERED":""));
-    const secs=[["Strategy","st"],["Bullet points","bp"],["AI answer","ai"],["My answer","my"],["Follow-up questions","fu"]];
+    const secs=[["Strategy","st"],["Bullet points","bp"],["AI answer","ai"],["My answer","my"]];
     for(const [name,k] of secs){
-      const v=effVal(k,it).trim();
+      const v=(effVal(k,it)||"").trim();
       if(v){ lines.push("","### "+name,"",v); }
     }
+    const fus=fuItems(it);
+    if(fus.length){ lines.push("","### Follow-up questions","");
+      for(const f of fus){ lines.push("- "+f.q); if(f.ai) lines.push("  "+f.ai.replace(/\n/g," ")); } }
     lines.push("","---","");
   }
   const blob=new Blob([lines.join("\n")],{type:"text/markdown"});
@@ -454,6 +457,14 @@ function dispId(it){
   return it.cat+(base+(idx<0?customs.length:idx)+1);
 }
 function kids(id){ return allQ().filter(x=>x.par===id); }
+// follow-ups can be plain strings OR objects {q,st,ai,bp}; normalize to an array of objects
+function fuItems(it){
+  var raw=(EDITS.fu[it.id]!==undefined)?EDITS.fu[it.id]:it.fu;
+  if(!raw) return [];
+  if(typeof raw==="string") return raw.split("\n").map(s=>({q:s.trim()})).filter(x=>x.q);
+  if(Array.isArray(raw)) return raw.map(x=> typeof x==="string" ? {q:x.trim()} : {q:(x.q||"").trim(),st:x.st||"",ai:x.ai||"",bp:x.bp||""}).filter(x=>x.q);
+  return [];
+}
 function addQuestion(){
   const cat = catSel==="all" ? "A" : catSel;
   let n=1; while(EDITS.add["N"+n]||EDITS.del["N"+n]) n++;
@@ -462,20 +473,19 @@ function addQuestion(){
 }
 function promoteFu(parId, idx){
   const par=findQ(parId); if(!par) return;
-  const lines=effVal("fu",par).split("\n").map(s=>s.trim()).filter(Boolean);
-  const text=lines[idx]; if(!text) return;
+  const f=fuItems(par)[idx]; if(!f||!f.q) return;
   let n=1; while(EDITS.add["N"+n]||EDITS.del["N"+n]) n++;
   const id="N"+n;
   EDITS.add[id]={cat:par.cat, par:parId};
-  EDITS.qt[id]=text; EDITS.rounds[id]=effRounds(par).slice();
+  EDITS.qt[id]=f.q; EDITS.rounds[id]=effRounds(par).slice(); EDITS.grp[id]=effGrp(par);
+  if(f.st) EDITS.st[id]=f.st; if(f.ai) EDITS.ai[id]=f.ai; if(f.bp) EDITS.bp[id]=f.bp;
   persist(); openDetail(id);
 }
 // tapping a follow-up line: open its card if already prepped, else prep it (make a card) and open
 function openFu(parId, idx){
   const par=findQ(parId); if(!par) return;
-  const lines=effVal("fu",par).split("\n").map(s=>s.trim()).filter(Boolean);
-  const text=lines[idx]; if(!text) return;
-  const existing=kids(parId).find(k=>effQ(k).trim()===text);
+  const f=fuItems(par)[idx]; if(!f||!f.q) return;
+  const existing=kids(parId).find(k=>effQ(k).trim()===f.q);
   if(existing){ openDetail(existing.id); return; }
   promoteFu(parId, idx);
 }
@@ -541,7 +551,7 @@ function matchBase(it){
   if(riskOnly && it.status!=="risk") return false;
   if(q){
     const hay=(it.id+" "+effQ(it)+" "
-      +effVal("st",it)+" "+effVal("ai",it)+" "+effVal("fu",it)+" "
+      +effVal("st",it)+" "+effVal("ai",it)+" "+fuItems(it).map(f=>f.q+" "+(f.ai||"")).join(" ")+" "
       +(EDITS.bp[it.id]||"")+" "+(EDITS.my[it.id]||"")).toLowerCase();
     if(!hay.includes(q.toLowerCase())) return false;
   }
@@ -606,7 +616,7 @@ function metaBadges(it){
   return b;
 }
 function cardHTML(it,seq){
-  const fuN = effVal("fu",it).split("\n").map(s=>s.trim()).filter(Boolean).length;
+  const fuN = fuItems(it).length;
   const parChip = "";
   const kidChip = fuN?`<span class="b parb" style="margin-top:3px" title="${fuN} follow-up question${fuN>1?"s":""}">↳ ${fuN} follow-up${fuN>1?"s":""}</span>`:"";
   return `<div class="card ${it.status==="risk"?"risk":""} ${doneSet.has(it.id)?"done":""} ${it.id===lastId?"last":""}" id="c-${it.id}" draggable="true" ondragstart="dragStart(event,'${it.id}')" ondragend="dragEnd(event)">
@@ -656,13 +666,13 @@ function detailHTML(it){
   b+=`<h4 class="myhead">My answer <button class="polishbtn" onclick="copyPolish('${it.id}',this)" title="Copy your answer + a polish prompt to paste into any AI chat">✨ Copy for AI polish</button></h4>`+ta("my",it,"Your own version — saved automatically.","my");
   // follow-up questions at the bottom; tap a row to prep it as its own card and open it
   {
-    const fuLines=effVal("fu",it).split("\n").map(s=>s.trim()).filter(Boolean);
-    if(fuLines.length){
+    const fus=fuItems(it);
+    if(fus.length){
       const kidByQ={}; kids(it.id).forEach(k=>{kidByQ[effQ(k).trim()]=k.id;});
-      b+=`<h4>Follow-up questions <span class="fuhint">— tap one to prep it as its own question</span></h4><div class="fulist">`;
-      fuLines.forEach((line,idx)=>{ const cid=kidByQ[line];
-        b+=`<div class="furow clk" onclick="openFu('${it.id}',${idx})"><span class="futext">${esc(line)}</span>`+
-          `<span class="fubtn${cid?" open":""}">${cid?"Open →":"＋ Prep →"}</span></div>`;
+      b+=`<h4>Follow-up questions <span class="fuhint">— tap one to open it as its own question</span></h4><div class="fulist">`;
+      fus.forEach((f,idx)=>{ const cid=kidByQ[f.q]; const ready=cid||f.ai;
+        b+=`<div class="furow clk" onclick="openFu('${it.id}',${idx})"><span class="futext">${esc(f.q)}</span>`+
+          `<span class="fubtn${ready?" open":""}">${cid?"Open →":"＋ Prep →"}</span></div>`;
       });
       b+=`</div>`;
     }
