@@ -565,9 +565,9 @@ var dragId=null;
 var _scrollVel=0, _scrollRAF=null;
 function _autoScrollLoop(){ if(!_scrollVel){ _scrollRAF=null; return; }
   window.scrollBy(0,_scrollVel); _scrollRAF=requestAnimationFrame(_autoScrollLoop); }
-function _edgeScroll(e){ var y=e.clientY, h=window.innerHeight, edge=80, max=20;
-  if(y<edge) _scrollVel=-Math.ceil(max*(1-y/edge));
-  else if(y>h-edge) _scrollVel=Math.ceil(max*(1-(h-y)/edge));
+function _edgeScroll(e){ var y=e.clientY, h=window.innerHeight, edge=90, max=48, min=10;
+  if(y<edge) _scrollVel=-(min+Math.ceil((max-min)*(1-y/edge)));
+  else if(y>h-edge) _scrollVel=(min+Math.ceil((max-min)*(1-(h-y)/edge)));
   else _scrollVel=0;
   if(_scrollVel && !_scrollRAF) _scrollRAF=requestAnimationFrame(_autoScrollLoop); }
 function _stopEdgeScroll(){ _scrollVel=0; if(_scrollRAF){ cancelAnimationFrame(_scrollRAF); _scrollRAF=null; }
