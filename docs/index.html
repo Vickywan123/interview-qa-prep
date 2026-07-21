@@ -474,10 +474,12 @@ function addQuestion(){
 function promoteFu(parId, idx){
   const par=findQ(parId); if(!par) return;
   const f=fuItems(par)[idx]; if(!f||!f.q) return;
+  const nk=kids(parId).length;               // follow-ups of this parent already promoted
   let n=1; while(EDITS.add["N"+n]||EDITS.del["N"+n]) n++;
   const id="N"+n;
   EDITS.add[id]={cat:par.cat, par:parId};
   EDITS.qt[id]=f.q; EDITS.rounds[id]=effRounds(par).slice(); EDITS.grp[id]=effGrp(par);
+  EDITS.ord[id]=effOrd(par)+(nk+1)*0.001;     // sort right after the parent (and after earlier-promoted follow-ups)
   if(f.st) EDITS.st[id]=f.st; if(f.ai) EDITS.ai[id]=f.ai; if(f.bp) EDITS.bp[id]=f.bp;
   persist(); openDetail(id);
 }
