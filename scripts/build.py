@@ -26,9 +26,9 @@ The spec JSON schema:
       "st": "Strategy text...",       # how to approach the answer (1-3 sentences)
       "bp": "point 1\npoint 2...",    # 3-5 short scannable bullet points (optional)
       "ai": "Draft answer text...",   # the model-written answer
-      "fu": [                    # follow-up questions, each with a short prepared answer (optional)
-        {"q": "Follow-up question?", "ai": "A concise 2-4 sentence model answer."},
-        {"q": "Another follow-up?", "ai": "..."}
+      "fu": [                    # follow-up questions, each with a strategy + short answer (optional)
+        {"q": "Follow-up question?", "st": "One-line strategy.", "ai": "A concise 2-4 sentence answer."},
+        {"q": "Another follow-up?", "st": "...", "ai": "..."}
       ]                          # (a plain "line1\nline2" string still works for bare probes)
     }
   ]

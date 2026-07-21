@@ -218,11 +218,13 @@ are `experience` (see above — one top-level question per project/role) and `co
 GTM, recent news, why-them-specifically), never filler. If you genuinely can't find 5 real
 questions for a theme, that's a signal to research the role/company more, not to pad.
 
-**Follow-ups matter, and each one gets its own prepared answer.** Real interviewers rarely accept
-the first answer. For every substantial question, add 1–3 follow-ups in that question's **`fu`
-field** — as an **array of `{"q": "...", "ai": "..."}` objects**, where each `ai` is a **concise
-2–4 sentence model answer** (shorter than a main answer — a follow-up is a drill-down, not a fresh
-question). This way, when the user taps a follow-up to open it, it's already prepped, not blank.
+**Follow-ups matter, and each one gets its own strategy AND prepared answer.** Real interviewers
+rarely accept the first answer. For every substantial question, add 1–3 follow-ups in that
+question's **`fu` field** — as an **array of `{"q": "...", "st": "...", "ai": "..."}` objects**:
+`st` is a **one-line strategy** (how to approach it / the pitfall to avoid), and `ai` is a
+**concise 2–4 sentence model answer** (shorter than a main answer — a follow-up is a drill-down).
+The strategy is what makes a follow-up genuinely useful, so don't skip it. This way, when the user
+taps a follow-up to open it, it's already prepped with both coaching and an answer, not blank.
 Do **not** create separate `par` questions for follow-ups — they live inside the parent, and in
 the app tapping a follow-up promotes it into its own full card (carrying its prepared answer) on
 demand. So even a high-stakes follow-up (e.g. a metric-level drill-down on a weak result) goes in
@@ -269,9 +271,9 @@ question; don't force one template onto everything.
   (one idea per line) — the at-a-glance version the user rehearses from. Keep them terse
   (fragments, not sentences). The user will edit these, so give a strong starting point, not
   a wall of text.
-- **Follow-up questions (`fu`)** — an array of `{"q": "...", "ai": "..."}`: each follow-up's `q` is
-  the question and `ai` is a **concise 2–4 sentence model answer**. **Never add ID cross-references
-  like `(→ B3)`** — question IDs are not shown anywhere in the app.
+- **Follow-up questions (`fu`)** — an array of `{"q": "...", "st": "...", "ai": "..."}`: the
+  question, a **one-line strategy**, and a **concise 2–4 sentence model answer**. **Never add ID
+  cross-references like `(→ B3)`** — question IDs are not shown anywhere in the app.
 
 **Ground every answer in the candidate's *real* history.** When only the candidate knows a
 number or a name you can't invent, write the surrounding answer and leave an explicit
