@@ -343,6 +343,8 @@ h1{cursor:pointer}
   <div class="sstats" id="stats"></div>
   <div class="saved" id="savednote"></div>
   <div class="sio">
+    <label class="stog" style="padding-left:0" title="Pick a file once; your answers auto-save to it on every edit. Keep it in an iCloud/Dropbox folder to survive cache-clears and reach other computers."><input type="checkbox" id="abtog" onchange="toggleAutoBackup(this.checked)" style="accent-color:var(--accent)">💾 Auto-backup to a file</label>
+    <div id="abstat" style="font-size:11px;color:var(--ok);min-height:14px;padding-left:2px"></div>
     <button onclick="exportAll()" style="color:var(--accent);font-weight:700">Export all (.md)</button>
     <button onclick="exportEdits()">Backup edits (.json)</button>
     <button onclick="document.getElementById('impf').click()">Import backup</button>
@@ -379,8 +381,67 @@ function notifySaved(){
   const el=document.getElementById("savednote");
   if(el) el.textContent="✓ Saved "+new Date().toLocaleTimeString();
 }
-function persist(){ localStorage.setItem(K_EDITS, JSON.stringify(EDITS)); notifySaved(); }
-function saveDone(){ localStorage.setItem(K_DONE, JSON.stringify([...doneSet])); notifySaved(); }
+function persist(){ localStorage.setItem(K_EDITS, JSON.stringify(EDITS)); notifySaved(); scheduleBackup(); }
+function saveDone(){ localStorage.setItem(K_DONE, JSON.stringify([...doneSet])); notifySaved(); scheduleBackup(); }
+
+/* ---------- auto-backup to a user-chosen file (File System Access API; Chrome/Edge) ---------- */
+const AB_SUPPORTED = !!(window.showSaveFilePicker);
+let autoBackup = localStorage.getItem(SK+"_ab")==="1";
+let backupHandle = null, backupTimer=null, backupNeedsGrant=false;
+function _idb(){ return new Promise((res,rej)=>{ var r=indexedDB.open("iprep_ab",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("h"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function _idbSet(k,v){ try{ var db=await _idb(); return new Promise(res=>{ var t=db.transaction("h","readwrite"); t.objectStore("h").put(v,k); t.oncomplete=()=>res(); t.onerror=()=>res(); }); }catch(e){} }
+async function _idbGet(k){ try{ var db=await _idb(); return new Promise(res=>{ var t=db.transaction("h","readonly"); var q=t.objectStore("h").get(k); q.onsuccess=()=>res(q.result); q.onerror=()=>res(null); }); }catch(e){ return null; } }
+const _ABKEY="h_"+SK;
+async function toggleAutoBackup(on){
+  if(on){
+    if(!AB_SUPPORTED){ alert("Auto-backup needs Chrome or Edge. On other browsers, use the “Backup edits (.json)” button below."); updateAbUI(); return; }
+    if(backupHandle){ autoBackup=true; localStorage.setItem(SK+"_ab","1"); if(backupNeedsGrant) await resumeBackup(); else await writeBackup(); }
+    else await pickBackupFile();
+  } else { autoBackup=false; localStorage.setItem(SK+"_ab","0"); }
+  updateAbUI();
+}
+async function pickBackupFile(){
+  try{
+    const h=await window.showSaveFilePicker({ suggestedName: SK+"_backup.json",
+      types:[{description:"Interview prep backup", accept:{"application/json":[".json"]}}] });
+    backupHandle=h; backupNeedsGrant=false; await _idbSet(_ABKEY,h);
+    autoBackup=true; localStorage.setItem(SK+"_ab","1"); await writeBackup();
+  }catch(e){}  // user cancelled the picker
+  updateAbUI();
+}
+async function writeBackup(){
+  if(!autoBackup||!backupHandle) return;
+  try{
+    var perm=await backupHandle.queryPermission({mode:"readwrite"});
+    if(perm!=="granted"){ backupNeedsGrant=true; updateAbUI(); return; }
+    var w=await backupHandle.createWritable();
+    await w.write(JSON.stringify({done:[...doneSet],...EDITS},null,2)); await w.close();
+    backupNeedsGrant=false;
+    var el=document.getElementById("abstat"); if(el) el.textContent="✓ backed up "+new Date().toLocaleTimeString();
+  }catch(e){ var el=document.getElementById("abstat"); if(el) el.textContent="⚠ backup failed — click to resume"; backupNeedsGrant=true; }
+}
+async function resumeBackup(){
+  if(!backupHandle) return;
+  try{ var p=await backupHandle.requestPermission({mode:"readwrite"}); if(p==="granted"){ backupNeedsGrant=false; await writeBackup(); } }catch(e){}
+  updateAbUI();
+}
+function scheduleBackup(){ if(!autoBackup||!backupHandle||backupNeedsGrant) return; clearTimeout(backupTimer); backupTimer=setTimeout(writeBackup,1500); }
+function updateAbUI(){
+  var tog=document.getElementById("abtog"); if(tog) tog.checked=autoBackup&&!!backupHandle;
+  var stat=document.getElementById("abstat"); if(!stat) return;
+  if(!AB_SUPPORTED) stat.innerHTML='<span style="color:var(--muted)">Chrome/Edge only — use Backup below</span>';
+  else if(autoBackup&&backupNeedsGrant) stat.innerHTML='<button onclick="resumeBackup()" style="color:var(--risk);text-decoration:underline">⚠ click to resume backup</button>';
+  else if(autoBackup&&backupHandle) stat.textContent="on — saves to your file on every edit";
+  else stat.textContent="";
+}
+async function restoreAutoBackup(){
+  if(AB_SUPPORTED && localStorage.getItem(SK+"_ab")==="1"){
+    var h=await _idbGet(_ABKEY);
+    if(h){ backupHandle=h; autoBackup=true; backupNeedsGrant=true; }  // needs one click to re-grant this session
+  }
+  updateAbUI();
+}
 let lastId = localStorage.getItem(K_LAST)||null;
 let lastRound = localStorage.getItem(K_LAST+"_round")||null;   // last round the user entered
 function touch(id){ lastId=id; localStorage.setItem(K_LAST,id); }
@@ -805,6 +866,7 @@ document.addEventListener("keydown",function(e){ if(e.key==="Escape"){
   if(document.getElementById("side").classList.contains("open")) closeDrawer();
   else if(detailId) closeDetail(); } });
 render();
+restoreAutoBackup();
 if(lastId){ const el=document.getElementById("c-"+lastId);
   if(el&&el.scrollIntoView) el.scrollIntoView({block:"center"}); }
 </script>

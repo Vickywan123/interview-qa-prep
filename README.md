@@ -43,6 +43,10 @@ likely follow-ups:
 - **Your edits win, forever** — the generated content is a default layer; the moment you edit a
   field it saves to the browser's localStorage and overrides the default, so regenerating the
   file never destroys your work. Export the whole bank to Markdown, or back up / restore as JSON.
+- **Auto-backup to a file** (optional; Chrome/Edge) — flip one toggle and pick a file once; every
+  edit then auto-saves to that file (overwriting it). Keep it in an iCloud/Dropbox folder and your
+  answers survive a cache-clear and follow you to another computer. A manual "Backup edits" button
+  is the fallback everywhere else.
 - **Bilingual / mixed-language** — English, Chinese, or mixed by round (e.g. a China-team round in
   Mandarin and a global round in English).
 
