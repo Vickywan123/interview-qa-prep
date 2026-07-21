@@ -117,6 +117,10 @@ main{flex:1;min-width:0}
   display:flex;align-items:baseline;gap:9px;color:var(--ink)}
 .sechead:first-child{margin-top:4px}
 .sechead small{color:var(--muted);font-size:11.5px;font-weight:400;letter-spacing:.03em;font-family:-apple-system,sans-serif}
+.sechead{cursor:pointer;user-select:none}
+.sechead .chev{display:inline-block;width:13px;margin-right:1px;color:var(--muted);font-size:11px;transition:color .1s}
+.sechead:hover .chev{color:var(--accent)}
+.sechead.col{opacity:.72}
 .subhead{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
   margin:16px 0 4px;display:flex;align-items:center;gap:7px}
 .subhead::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
@@ -659,7 +663,7 @@ function dragEnd(e){ _stopEdgeScroll(); var c=dragId&&document.getElementById("c
   var zs=document.querySelectorAll(".zone.dragover"); for(var i=0;i<zs.length;i++) zs[i].classList.remove("dragover"); dragId=null; }
 function dragOverZone(e){ e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect="move"; e.currentTarget.classList.add("dragover"); }
 function dragLeaveZone(e){ if(e.currentTarget.contains(e.relatedTarget)) return; e.currentTarget.classList.remove("dragover"); }
-function dropZone(e,grp){ e.preventDefault(); var z=e.currentTarget; z.classList.remove("dragover");
+function dropZone(e,grp){ e.preventDefault(); var z=e.currentTarget; z.classList.remove("dragover"); collapsed.delete(grp);
   var id=dragId||(e.dataTransfer&&e.dataTransfer.getData("text/plain")); if(!id) return;
   var it=findQ(id); if(!it) return;
   var cards=[].slice.call(z.querySelectorAll(".card")).filter(function(el){return el.id!=="c-"+id;});
@@ -819,6 +823,13 @@ function renderStats(){
     `My answers <b>${answered}</b> · Mastered <b>${doneSet.size}</b>`+
     (risk?`<br>High-risk <b style="color:var(--risk)">${risk}</b>`:"");
 }
+const collapsed = new Set(JSON.parse(localStorage.getItem(SK+"_collapsed")||"[]"));
+function toggleCollapse(k){ if(collapsed.has(k)) collapsed.delete(k); else collapsed.add(k);
+  localStorage.setItem(SK+"_collapsed", JSON.stringify([...collapsed])); render(); }
+function secHead(key,label,sub){
+  const c=collapsed.has(key);
+  return `<div class="sechead${c?" col":""}" onclick="toggleCollapse('${key}')"><span class="chev">${c?"▸":"▾"}</span>${label}<small>${sub}</small></div>`;
+}
 function render(){
   renderSide(); renderStats(); updateFCount(); updateJdBtn(); updateChrome();
   const list=document.getElementById("list");
@@ -836,8 +847,8 @@ function render(){
   let html=crumb, seq=0;
   function askSection(){
     ask.sort(function(a,b){return ((effRounds(a)[0]||9)-(effRounds(b)[0]||9))||effOrd(a)-effOrd(b);});
-    let h=`<div class="sechead">🙋 Questions to ask<small>${ask.length} for the interviewer</small></div>`;
-    for(const it of ask){ h+=cardHTML(it); }
+    let h=secHead("ask","🙋 Questions to ask",`${ask.length} for the interviewer`);
+    if(!collapsed.has("ask")){ for(const it of ask){ h+=cardHTML(it); } }
     return h;
   }
   if(askOnly){
@@ -845,15 +856,23 @@ function render(){
     list.innerHTML=html; return;
   }
   if(!ans.length && !ask.length){ list.innerHTML=crumb+`<div class="empty">No questions here yet.</div>`; return; }
+  const _withRound=ans.filter(function(x){return effRounds(x).length>0;});
+  const _noRound=ans.filter(function(x){return effRounds(x).length===0;});
   for(const grp of GRP_ORDER){
-    const items=ans.filter(function(x){return effGrp(x)===grp;}).sort(function(a,b){return effOrd(a)-effOrd(b);});
+    const items=_withRound.filter(function(x){return effGrp(x)===grp;}).sort(function(a,b){return effOrd(a)-effOrd(b);});
     if(!items.length) continue;
     html+=`<div class="zone" data-grp="${grp}" ondragover="dragOverZone(event)" ondragleave="dragLeaveZone(event)" ondrop="dropZone(event,'${grp}')">`;
-    html+=`<div class="sechead">${GRP_LABEL[grp]}<small>${items.length} question${items.length>1?"s":""}</small></div>`;
-    for(const it of items){ seq++; html+=cardHTML(it,seq); }
+    html+=secHead(grp,GRP_LABEL[grp],`${items.length} question${items.length>1?"s":""}`);
+    if(!collapsed.has(grp)){ for(const it of items){ seq++; html+=cardHTML(it,seq); } }
     html+=`</div>`;
   }
   if(ask.length) html+=askSection();
+  if(_noRound.length){
+    _noRound.sort(function(a,b){return effOrd(a)-effOrd(b);});
+    html+=`<div class="zone">`+secHead("unsorted","Unsorted",`${_noRound.length} — no round selected`);
+    if(!collapsed.has("unsorted")){ for(const it of _noRound){ seq++; html+=cardHTML(it,seq); } }
+    html+=`</div>`;
+  }
   list.innerHTML=html;
 
 }
